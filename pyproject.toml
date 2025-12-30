@@ -23,6 +23,9 @@ dependencies = [
     "warcio>=1.7.4",
     "httpx>=0.27.0",
     "html2text>=2024.2.26",
+    "Pillow>=10.0.0",
+    "numpy>=1.24.0",
+    "colorama>=0.4.6",
 ]
 
 [project.optional-dependencies]
