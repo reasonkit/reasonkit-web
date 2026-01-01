@@ -180,7 +180,7 @@ impl BrowserController {
         });
 
         // Headless mode
-        if config.headless {
+        if !config.headless {
             builder = builder.with_head();
         }
 
