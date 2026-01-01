@@ -62,7 +62,7 @@ impl StealthMode {
 
     /// Override WebGL fingerprinting
     async fn override_webgl(page: &Page) -> Result<()> {
-        let script = r#"
+        let script = r"
             const getParameterOriginal = WebGLRenderingContext.prototype.getParameter;
             WebGLRenderingContext.prototype.getParameter = function(parameter) {
                 // UNMASKED_VENDOR_WEBGL
@@ -89,7 +89,7 @@ impl StealthMode {
                     return getParameter2Original.call(this, parameter);
                 };
             }
-        "#;
+        ";
         Self::inject_script(page, script).await
     }
 

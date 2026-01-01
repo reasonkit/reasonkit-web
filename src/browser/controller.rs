@@ -199,6 +199,13 @@ impl BrowserController {
             builder = builder.arg(arg);
         }
 
+        // Ensure WebGL support in headless mode
+        if config.headless {
+            builder = builder.arg("--use-gl=swiftshader");
+            builder = builder.arg("--enable-webgl");
+            builder = builder.arg("--ignore-gpu-blocklist");
+        }
+
         let cdp_config = builder
             .build()
             .map_err(|e| BrowserError::ConfigError(e.to_string()))?;
