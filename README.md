@@ -45,7 +45,7 @@ cargo build --release
 
 The ReasonKit Web layer implements a high-performance web sensing architecture designed for AI reasoning systems:
 
-![ReasonKit Web Sensing Architecture](./brand/readme-assets/web_sensing_layer.png)
+![ReasonKit Web Architecture Diagram](./brand/readme-assets/architecture.png)
 
 ### Key Design Principles
 
