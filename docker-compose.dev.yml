@@ -1,0 +1,57 @@
+# ReasonKit Web - Development Docker Compose Override
+#
+# Usage:
+#   docker compose -f docker-compose.yml -f docker-compose.dev.yml up
+#
+# This override provides:
+# - Debug logging
+# - Source code mounting for hot-reload development
+# - Relaxed resource limits
+# - Interactive terminal
+
+services:
+  reasonkit-web:
+    # Build from source in development
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: builder  # Stop at builder stage for development
+
+    # Development environment
+    environment:
+      - RUST_LOG=debug
+      - RUST_BACKTRACE=1
+      - REASONKIT_WEB_TOKEN=dev-token-insecure
+
+    # Mount source code for development
+    volumes:
+      - .:/home/builder/app:cached
+      - cargo-cache:/home/builder/.cargo/registry
+      - target-cache:/home/builder/app/target
+
+    # Allow interactive debugging
+    stdin_open: true
+    tty: true
+
+    # Relaxed resource limits for development
+    deploy:
+      resources:
+        limits:
+          cpus: '4.0'
+          memory: 4G
+
+    # Disable read-only for development
+    read_only: false
+
+    # Development restart policy
+    restart: "no"
+
+    # Override command for development
+    command: ["cargo", "watch", "-x", "run -- serve"]
+
+# Development-only volumes
+volumes:
+  cargo-cache:
+    driver: local
+  target-cache:
+    driver: local

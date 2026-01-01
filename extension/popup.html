@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ReasonKit Web Connector</title>
+  <style>
+    :root {
+      --bg-primary: #030508;
+      --bg-secondary: #0a0d14;
+      --text-primary: #f9fafb;
+      --text-secondary: #9ca3af;
+      --accent-cyan: #06b6d4;
+      --accent-purple: #a855f7;
+      --accent-green: #10b981;
+      --accent-orange: #f97316;
+      --border-color: #1f2937;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-width: 320px;
+      padding: 16px;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .header img {
+      width: 32px;
+      height: 32px;
+    }
+
+    .header h1 {
+      font-size: 16px;
+      font-weight: 600;
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .header .version {
+      font-size: 11px;
+      color: var(--text-secondary);
+      margin-left: auto;
+    }
+
+    .status-section {
+      background: var(--bg-secondary);
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .status-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+    }
+
+    .status-row:not(:last-child) {
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .status-label {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .status-value {
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .status-value.connected {
+      color: var(--accent-green);
+    }
+
+    .status-value.disconnected {
+      color: var(--accent-orange);
+    }
+
+    .status-indicator {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-right: 6px;
+    }
+
+    .status-indicator.connected {
+      background: var(--accent-green);
+      box-shadow: 0 0 8px var(--accent-green);
+    }
+
+    .status-indicator.disconnected {
+      background: var(--accent-orange);
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .stat-box {
+      background: var(--bg-primary);
+      border-radius: 6px;
+      padding: 12px;
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--accent-cyan);
+    }
+
+    .stat-label {
+      font-size: 10px;
+      color: var(--text-secondary);
+      margin-top: 4px;
+      text-transform: uppercase;
+    }
+
+    .config-section {
+      margin-bottom: 16px;
+    }
+
+    .config-section h2 {
+      font-size: 12px;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      margin-bottom: 12px;
+    }
+
+    .input-group {
+      margin-bottom: 12px;
+    }
+
+    .input-group label {
+      display: block;
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 10px 12px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      color: var(--text-primary);
+      font-size: 13px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .input-group input:focus {
+      outline: none;
+      border-color: var(--accent-cyan);
+    }
+
+    .button-row {
+      display: flex;
+      gap: 8px;
+    }
+
+    button {
+      flex: 1;
+      padding: 10px 16px;
+      border: none;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    button.primary {
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+      color: white;
+    }
+
+    button.secondary {
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      border: 1px solid var(--border-color);
+    }
+
+    .footer {
+      margin-top: 16px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border-color);
+      text-align: center;
+    }
+
+    .footer a {
+      color: var(--accent-cyan);
+      text-decoration: none;
+      font-size: 12px;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
+
+    .message {
+      padding: 10px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      margin-bottom: 12px;
+      display: none;
+    }
+
+    .message.success {
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid var(--accent-green);
+      color: var(--accent-green);
+    }
+
+    .message.error {
+      background: rgba(249, 115, 22, 0.1);
+      border: 1px solid var(--accent-orange);
+      color: var(--accent-orange);
+    }
+
+    .message.visible {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <img src="icons/icon48.png" alt="ReasonKit">
+    <h1>ReasonKit Web</h1>
+    <span class="version" id="version">v0.1.0</span>
+  </div>
+
+  <div id="message" class="message"></div>
+
+  <div class="status-section">
+    <div class="status-row">
+      <span class="status-label">Server Status</span>
+      <span class="status-value" id="server-status">
+        <span class="status-indicator disconnected"></span>
+        Checking...
+      </span>
+    </div>
+    <div class="status-row">
+      <span class="status-label">Server URL</span>
+      <span class="status-value" id="server-url">-</span>
+    </div>
+    <div class="status-row">
+      <span class="status-label">Auth Token</span>
+      <span class="status-value" id="auth-status">Not Set</span>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-box">
+        <div class="stat-value" id="stat-total">0</div>
+        <div class="stat-label">Total</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-value" id="stat-success">0</div>
+        <div class="stat-label">Success</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-value" id="stat-failed">0</div>
+        <div class="stat-label">Failed</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="config-section">
+    <h2>Configuration</h2>
+    <div class="input-group">
+      <label for="auth-token">Authentication Token</label>
+      <input type="password" id="auth-token" placeholder="Enter your auth token...">
+    </div>
+    <div class="button-row">
+      <button class="primary" id="save-token">Save Token</button>
+      <button class="secondary" id="clear-token">Clear</button>
+    </div>
+  </div>
+
+  <div class="button-row">
+    <button class="secondary" id="capture-now">Capture Now</button>
+    <button class="secondary" id="refresh-status">Refresh</button>
+  </div>
+
+  <div class="footer">
+    <a href="https://reasonkit.sh/docs/web" target="_blank">Documentation</a>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

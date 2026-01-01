@@ -1,0 +1,142 @@
+# ReasonKit Web MCP Sidecar - systemd Service Unit
+# Production deployment for Debian 13 (Trixie)
+#
+# Installation:
+#   sudo cp reasonkit-web.service /etc/systemd/system/
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable --now reasonkit-web.service
+#
+# Documentation: https://reasonkit.sh/docs/deployment
+
+[Unit]
+Description=ReasonKit Web MCP Sidecar
+Documentation=https://reasonkit.sh/docs
+After=network-online.target
+Wants=network-online.target
+StartLimitIntervalSec=300
+StartLimitBurst=5
+
+[Service]
+# Service Type: notify for sd_notify watchdog support
+Type=notify
+NotifyAccess=main
+
+# User/Group: Run as dedicated non-root user
+User=reasonkit
+Group=reasonkit
+
+# Working Directory
+WorkingDirectory=/opt/reasonkit
+
+# Executable
+ExecStart=/opt/reasonkit/bin/reasonkit-web
+ExecReload=/bin/kill -HUP $MAINPID
+
+# Environment Configuration
+EnvironmentFile=-/etc/reasonkit/reasonkit-web.env
+Environment=RUST_LOG=info
+Environment=RUST_BACKTRACE=1
+
+# ============================================================
+# SECURITY HARDENING (Defense in Depth)
+# ============================================================
+
+# Filesystem Protection
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+ProtectProc=invisible
+ProcSubset=pid
+
+# Read/Write Paths (explicit allowlist)
+ReadWritePaths=/var/lib/reasonkit
+ReadWritePaths=/var/log/reasonkit
+ReadOnlyPaths=/etc/reasonkit
+
+# Capability Restrictions
+CapabilityBoundingSet=
+AmbientCapabilities=
+NoNewPrivileges=yes
+
+# Namespace Isolation
+PrivateUsers=yes
+ProtectHostname=yes
+ProtectClock=yes
+
+# System Call Filtering
+SystemCallArchitectures=native
+SystemCallFilter=@system-service
+SystemCallFilter=~@privileged @resources @mount @swap @reboot @raw-io
+
+# Memory Protection
+MemoryDenyWriteExecute=yes
+LockPersonality=yes
+
+# Network Restrictions (allow only necessary)
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+IPAddressDeny=any
+IPAddressAllow=localhost
+IPAddressAllow=10.0.0.0/8
+IPAddressAllow=172.16.0.0/12
+IPAddressAllow=192.168.0.0/16
+
+# Misc Security
+RestrictRealtime=yes
+RestrictSUIDSGID=yes
+RemoveIPC=yes
+UMask=0077
+
+# ============================================================
+# RESOURCE LIMITS
+# ============================================================
+
+# Memory Limits
+MemoryMax=512M
+MemoryHigh=448M
+MemorySwapMax=0
+
+# CPU Limits
+CPUQuota=100%
+CPUWeight=100
+
+# Task/Process Limits
+TasksMax=100
+LimitNOFILE=65536
+LimitNPROC=512
+
+# ============================================================
+# RESTART & WATCHDOG POLICY
+# ============================================================
+
+# Restart on failure only
+Restart=on-failure
+RestartSec=5
+TimeoutStartSec=30
+TimeoutStopSec=30
+
+# Watchdog: service must notify within 30s or be killed
+WatchdogSec=30
+
+# Graceful shutdown
+KillMode=mixed
+KillSignal=SIGTERM
+FinalKillSignal=SIGKILL
+TimeoutAbortSec=30
+
+# ============================================================
+# LOGGING
+# ============================================================
+
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=reasonkit-web
+SyslogFacility=daemon
+SyslogLevel=info
+
+[Install]
+WantedBy=multi-user.target

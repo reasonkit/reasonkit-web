@@ -1,0 +1,249 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 960 320"
+     width="960" height="320"
+     fill="none">
+  <defs>
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         REASONKIT BRAND-COMPLIANT SVG DEFINITIONS
+         Source: /BRAND_IDENTITY.md v2.0.0
+         ═══════════════════════════════════════════════════════════════════════ -->
+
+    <!-- Hero gradient (cyan → purple → pink) -->
+    <linearGradient id="heroGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#06b6d4"/>
+      <stop offset="50%" stop-color="#a855f7"/>
+      <stop offset="100%" stop-color="#ec4899"/>
+    </linearGradient>
+
+    <!-- Cyan gradient (for accents) -->
+    <linearGradient id="cyanGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#06b6d4"/>
+      <stop offset="100%" stop-color="#0891b2"/>
+    </linearGradient>
+
+    <!-- Purple gradient -->
+    <linearGradient id="purpleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#a855f7"/>
+      <stop offset="100%" stop-color="#7c3aed"/>
+    </linearGradient>
+
+    <!-- Green gradient (for verified facts) -->
+    <linearGradient id="greenGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#10b981"/>
+      <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+
+    <!-- Soft glow -->
+    <filter id="softGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Card shadow -->
+    <filter id="cardShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="10" stdDeviation="18"
+                    flood-color="#000000" flood-opacity="0.55"/>
+    </filter>
+
+    <!-- Arrow markers -->
+    <marker id="arrowCyan" markerWidth="10" markerHeight="10"
+            refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#06b6d4"/>
+    </marker>
+
+    <marker id="arrowPurple" markerWidth="10" markerHeight="10"
+            refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#a855f7"/>
+    </marker>
+
+    <!-- Dashed arrow for delegation -->
+    <marker id="arrowDashed" markerWidth="10" markerHeight="10"
+            refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#10b981" opacity="0.6"/>
+    </marker>
+
+    <!-- Very subtle grid -->
+    <pattern id="gridPattern" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40"
+            fill="none" stroke="#1a1a2e" stroke-width="0.5" opacity="0.4"/>
+    </pattern>
+  </defs>
+
+  <!-- Background (transparent outside main card so you can layer it) -->
+  <rect x="0" y="0" width="960" height="320" fill="none"/>
+
+  <!-- Main container card -->
+  <g transform="translate(40,40)" filter="url(#cardShadow)">
+    <rect x="0" y="0" width="880" height="240" rx="18"
+          fill="#030508" stroke="#111827" stroke-width="1.5"/>
+    <!-- Subtle grid overlay inside card -->
+    <rect x="0" y="0" width="880" height="240"
+          fill="url(#gridPattern)" opacity="0.35"/>
+
+    <!-- Header strip -->
+    <rect x="0" y="0" width="880" height="42" rx="18"
+          fill="#111827"/>
+    <!-- Header accent line -->
+    <rect x="0" y="40" width="880" height="2"
+          fill="url(#heroGrad)" opacity="0.8"/>
+
+    <!-- Title -->
+    <text x="32" y="26"
+          fill="#f9fafb"
+          font-family="Inter, -apple-system, BlinkMacSystemFont, sans-serif"
+          font-size="16" font-weight="700" letter-spacing="2">
+      WEB SENSING LAYER
+    </text>
+    <text x="290" y="26"
+          fill="#6b7280"
+          font-family="Inter, -apple-system, BlinkMacSystemFont, sans-serif"
+          font-size="12" font-weight="500" letter-spacing="3">
+      RUST
+    </text>
+
+    <!-- LEFT: AI Agent / MCP / Browser Controller -->
+    <g transform="translate(40,70)">
+      <!-- AI Agent -->
+      <rect x="0" y="0" width="170" height="54" rx="10"
+            fill="#111827" stroke="#06b6d4" stroke-width="1.5"
+            filter="url(#softGlow)"/>
+      <text x="85" y="33"
+            text-anchor="middle"
+            fill="#f9fafb"
+            font-family="Inter, -apple-system, sans-serif"
+            font-size="14" font-weight="600">
+        AI Agent
+      </text>
+
+      <!-- MCP Server -->
+      <rect x="210" y="0" width="170" height="54" rx="10"
+            fill="#111827" stroke="#a855f7" stroke-width="1.5"
+            filter="url(#softGlow)"/>
+      <text x="295" y="23"
+            text-anchor="middle"
+            fill="#f9fafb"
+            font-family="Inter, -apple-system, sans-serif"
+            font-size="13" font-weight="600">
+        MCP Server
+      </text>
+      <text x="295" y="38"
+            text-anchor="middle"
+            fill="#9ca3af"
+            font-family="Inter, -apple-system, sans-serif"
+            font-size="10" font-weight="400">
+        protocol orchestration
+      </text>
+
+      <!-- Browser Controller (CDP) -->
+      <rect x="420" y="0" width="210" height="54" rx="10"
+            fill="#111827" stroke="#06b6d4" stroke-width="1.5"
+            filter="url(#softGlow)"/>
+      <text x="525" y="23"
+            text-anchor="middle"
+            fill="#f9fafb"
+            font-family="Inter, -apple-system, sans-serif"
+            font-size="13" font-weight="600">
+        Browser Controller
+      </text>
+      <text x="525" y="38"
+            text-anchor="middle"
+            fill="#9ca3af"
+            font-family="Inter, -apple-system, sans-serif"
+            font-size="10" font-weight="400">
+        CDP / headless automation
+      </text>
+
+      <!-- Arrows: AI Agent -> MCP -> Browser -->
+      <line x1="170" y1="27" x2="210" y2="27"
+            stroke="#06b6d4" stroke-width="2" marker-end="url(#arrowCyan)"/>
+      <line x1="380" y1="27" x2="420" y2="27"
+            stroke="#a855f7" stroke-width="2" marker-end="url(#arrowPurple)"/>
+    </g>
+
+    <!-- Capture / Extraction row -->
+    <g transform="translate(240,150)">
+      <!-- Capture -->
+      <rect x="0" y="0" width="200" height="60" rx="10"
+            fill="#111827" stroke="#06b6d4" stroke-width="1.5"
+            filter="url(#softGlow)"/>
+      <text x="100" y="24"
+            text-anchor="middle"
+            fill="#f9fafb"
+            font-family="Inter, -apple-system, sans-serif"
+            font-size="13" font-weight="600">
+        Capture
+      </text>
+      <text x="100" y="40"
+            text-anchor="middle"
+            fill="#9ca3af"
+            font-family="JetBrains Mono, SF Mono, Consolas, monospace"
+            font-size="10">
+        screenshots · PDFs · HTML
+      </text>
+
+      <!-- Extraction -->
+      <rect x="260" y="0" width="240" height="60" rx="10"
+            fill="#111827" stroke="#06b6d4" stroke-width="1.5"
+            filter="url(#softGlow)"/>
+      <text x="380" y="24"
+            text-anchor="middle"
+            fill="#f9fafb"
+            font-family="Inter, -apple-system, sans-serif"
+            font-size="13" font-weight="600">
+        Extraction
+      </text>
+      <text x="380" y="40"
+            text-anchor="middle"
+            fill="#9ca3af"
+            font-family="JetBrains Mono, SF Mono, Consolas, monospace"
+            font-size="10">
+        content + metadata
+      </text>
+
+      <!-- Arrow: Browser -> Capture (down) -->
+      <line x1="360" y1="-36" x2="200" y2="0"
+            stroke="#06b6d4" stroke-width="2" marker-end="url(#arrowCyan)"/>
+
+      <!-- Arrow: Capture -> Extraction -->
+      <line x1="200" y1="30" x2="260" y2="30"
+            stroke="#06b6d4" stroke-width="2" marker-end="url(#arrowCyan)"/>
+
+      <!-- Dashed arrow: Extraction -> reasonkit-mem (delegation) -->
+      <line x1="500" y1="30" x2="640" y2="30"
+            stroke="#10b981" stroke-width="2" stroke-dasharray="4,4" 
+            marker-end="url(#arrowDashed)" opacity="0.7"/>
+      
+      <!-- reasonkit-mem box (external, lighter) -->
+      <rect x="640" y="5" width="180" height="50" rx="10"
+            fill="#0a0d14" stroke="#10b981" stroke-width="1.5"
+            stroke-dasharray="3,3" opacity="0.8"/>
+      <text x="730" y="24"
+            text-anchor="middle"
+            fill="#9ca3af"
+            font-family="Inter, -apple-system, sans-serif"
+            font-size="12" font-weight="600">
+        reasonkit-mem
+      </text>
+      <text x="730" y="38"
+            text-anchor="middle"
+            fill="#6b7280"
+            font-family="JetBrains Mono, SF Mono, Consolas, monospace"
+            font-size="9">
+        triangulation
+      </text>
+    </g>
+
+    <!-- Footer micro-copy -->
+    <text x="440" y="228"
+          text-anchor="middle"
+          fill="#4b5563"
+          font-family="JetBrains Mono, SF Mono, Consolas, monospace"
+          font-size="10">
+      rust-native web sensing · zero-trust capture · content extraction → triangulation
+    </text>
+  </g>
+</svg>
+

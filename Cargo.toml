@@ -1,22 +1,27 @@
 [package]
 name = "reasonkit-web"
-version = "0.2.0"
+version = "0.1.0"
 edition = "2021"
 rust-version = "1.74"
 authors = ["ReasonKit Team <team@reasonkit.sh>"]
-description = "Web sensing and browser automation layer for ReasonKit - MCP sidecar with headless browser control"
+description = "Web sensing and browser automation layer for ReasonKit - MCP sidecar with headless browser control and WASM browser connector"
 license = "Apache-2.0"
 repository = "https://github.com/reasonkit/reasonkit-web"
 homepage = "https://reasonkit.sh"
 documentation = "https://docs.rs/reasonkit-web"
 readme = "README.md"
-keywords = ["mcp", "browser", "automation", "web-sensing", "headless-browser"]
-categories = ["web-programming", "api-bindings"]
+keywords = ["mcp", "browser", "automation", "web-sensing", "headless-browser", "wasm", "reasoning"]
+categories = ["web-programming", "api-bindings", "development-tools"]
 
+# Include all source directories
 include = [
     "src/**/*",
+    "benches/**/*",
+    "extension/**/*",
+    "systemd/**/*",
     "Cargo.toml",
     "README.md",
+    "CHANGELOG.md",
     "LICENSE",
 ]
 
@@ -27,52 +32,189 @@ rustdoc-args = ["--cfg", "docsrs"]
 [lib]
 name = "reasonkit_web"
 path = "src/lib.rs"
+# cdylib for WASM, rlib for native
+crate-type = ["cdylib", "rlib"]
 
+# Binary for MCP server
 [[bin]]
 name = "reasonkit-web"
-path = "src/main.rs"
+path = "src/bin/mcp_server.rs"
 
+# =============================================================================
+# Shared Dependencies (both native and WASM)
+# =============================================================================
 [dependencies]
-# Browser automation
-chromiumoxide = { version = "0.5", features = ["tokio-runtime"] }
-
-# Async runtime
-tokio = { version = "1", features = ["full"] }
-futures = "0.3"
-
 # Serialization
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 
+# Date/time (with WASM support)
+chrono = { version = "0.4", features = ["serde", "wasmbind"] }
+
+# Identifiers (with JS UUID support for WASM)
+uuid = { version = "1", features = ["v4", "serde", "js"] }
+
 # Error handling
 thiserror = "1"
+
+# =============================================================================
+# Native-only Dependencies (MCP Server)
+# =============================================================================
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+# Browser automation
+chromiumoxide = { version = "0.5", features = ["tokio-runtime"] }
+
+# Web framework
+axum = { version = "0.7", features = ["macros"] }
+tokio = { version = "1", features = ["full", "signal", "sync"] }
+tokio-stream = "0.1"
+tower = "0.4"
+tower-http = { version = "0.5", features = ["cors", "trace", "timeout"] }
+http = "1"
+
+# Logging and tracing
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "json"] }
+
+# CLI parsing
+clap = { version = "4", features = ["derive", "env"] }
+
+# Error handling (extended)
 anyhow = "1"
 
-# Logging
-tracing = "0.1"
-tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+# System information
+sysinfo = "0.30"
 
-# CLI
-clap = { version = "4", features = ["derive"] }
+# Async utilities
+futures = "0.3"
+async-trait = "0.1"
+
+# HTML parsing (for content processing)
+regex = "1"
+scraper = "0.20"
 
 # Utilities
 base64 = "0.22"
-rand = "0.8"
-chrono = { version = "0.4", features = ["serde"] }
-regex = "1"
+url = "2"
+htmlescape = "0.3"
+pin-project = "1"
 
+# Metrics
+metrics = "0.23"
+metrics-exporter-prometheus = { version = "0.15", optional = true }
+hdrhistogram = "7.5"
+parking_lot = "0.12"
+
+# =============================================================================
+# WASM-only Dependencies (Browser Connector)
+# =============================================================================
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+# WASM bindings
+wasm-bindgen = "0.2"
+wasm-bindgen-futures = "0.4"
+js-sys = "0.3"
+serde-wasm-bindgen = "0.6"
+
+# Browser APIs
+web-sys = { version = "0.3", features = [
+    # Core types
+    "console",
+    "Window",
+    "Document",
+    "Element",
+    "HtmlElement",
+    "Node",
+    "NodeList",
+
+    # MutationObserver
+    "MutationObserver",
+    "MutationObserverInit",
+    "MutationRecord",
+
+    # Page Visibility
+    "VisibilityState",
+
+    # Fetch API
+    "Request",
+    "RequestInit",
+    "RequestMode",
+    "Response",
+    "Headers",
+
+    # Events
+    "Event",
+    "EventTarget",
+]}
+
+# Console logging for WASM
+gloo-console = "0.3"
+
+# Timers for debouncing
+gloo-timers = "0.3"
+
+# =============================================================================
+# Development Dependencies
+# =============================================================================
 [dev-dependencies]
 # Testing
 tokio-test = "0.4"
 tempfile = "3"
+axum-test = "16"
+reqwest = { version = "0.12", features = ["json"] }
+rand = "0.8"
 
+# WASM testing
+wasm-bindgen-test = "0.3"
+
+# =============================================================================
+# Features
+# =============================================================================
 [features]
-default = []
+default = ["prometheus"]
+
+# Enable Prometheus metrics export
+prometheus = ["metrics-exporter-prometheus"]
+
 # Enable full stealth mode (additional anti-detection)
 full-stealth = []
 
+# Enable WASM browser connector build
+wasm = []
+
+# Enable console error panic hook for better WASM debugging
+console_error_panic_hook = []
+
+# =============================================================================
+# Profiles
+# =============================================================================
+[profile.dev]
+opt-level = 0
+debug = true
+
 [profile.release]
 opt-level = 3
+debug = false
 lto = true
 codegen-units = 1
 strip = true
+
+# WASM-specific release profile (optimize for size)
+[profile.release-wasm]
+inherits = "release"
+opt-level = "z"  # Optimize for size
+lto = true
+codegen-units = 1
+
+# =============================================================================
+# Lints
+# =============================================================================
+[lints.rust]
+unsafe_code = "forbid"
+
+[lints.clippy]
+all = "warn"
+pedantic = "warn"
+nursery = "warn"
+
+[package.metadata.wasm-pack.profile.release]
+wasm-opt = ["-Oz"]

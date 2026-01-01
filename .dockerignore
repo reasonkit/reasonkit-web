@@ -1,0 +1,107 @@
+# =============================================================================
+# ReasonKit Web - Docker Ignore File
+# Excludes files from Docker build context for faster builds and smaller images
+# =============================================================================
+
+# Rust build artifacts
+target/
+**/*.rs.bk
+Cargo.lock.bak
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Documentation (except README)
+*.md
+!README.md
+docs/
+
+# IDE and editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+.travis.yml
+.circleci/
+
+# Tests (not needed in production image)
+tests/
+benches/
+examples/
+
+# Development files
+.env
+.env.*
+!.env.example
+*.log
+*.tmp
+
+# Docker files (avoid recursion)
+Dockerfile*
+docker-compose*.yml
+.docker/
+
+# Security - never include these
+*.pem
+*.key
+*.crt
+*.p12
+credentials/
+secrets/
+.secrets/
+
+# Performance and profiling
+*.perf
+*.prof
+perf.data*
+flamegraph.svg
+
+# Backup files
+*.bak
+*.backup
+*.old
+
+# Cache directories
+.cache/
+__pycache__/
+node_modules/
+
+# Build artifacts from other tools
+dist/
+build/
+out/
+pkg/
+
+# OS-specific
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# Local configuration
+.local/
+.config/
+*.local
+
+# Asset source files (keep compiled only)
+assets/src/
+*.psd
+*.ai
+*.sketch
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.temp

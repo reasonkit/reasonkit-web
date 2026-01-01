@@ -27,7 +27,7 @@ Web sensing and browser automation layer for ReasonKit. Implements the Model Con
 - **Headless Browser Automation** - Full browser control via ChromiumOxide (CDP)
 - **MCP Server** - Model Context Protocol for AI integration
 - **Web Capture** - Screenshot, PDF, and HTML capture
-- **Content Extraction** - Intelligent content parsing and triangulation
+- **Content Extraction** - Intelligent content parsing and metadata extraction
 - **High Performance** - Async Rust runtime (Tokio) for low-latency operations
 
 ## Quick Start
@@ -53,14 +53,20 @@ cargo build --release
 │                    │                │                           │
 │                    ▼                ▼                           │
 │              ┌──────────┐    ┌──────────────┐                   │
-│              │ Capture  │    │ Triangulate  │                   │
+│              │ Capture  │    │ Extraction   │                   │
 │              └────┬─────┘    └──────┬───────┘                   │
 │                   │                 │                           │
 │                   ▼                 ▼                           │
-│            Screenshots        Content + Sources                 │
-│            PDFs, HTML        Verified Facts                     │
+│            Screenshots        Content + Metadata                │
+│            PDFs, HTML         Links, Structured Data            │
+│                   │                 │                           │
+│                   └────────┬────────┘                           │
+│                            ▼                                    │
+│                    reasonkit-mem (Triangulation)                │
 └─────────────────────────────────────────────────────────────────┘
 ```
+
+**Note:** Content extraction happens in `reasonkit-web`. Multi-source triangulation and verification are delegated to `reasonkit-mem` via the PyO3 bridge. See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for details.
 
 </div>
 

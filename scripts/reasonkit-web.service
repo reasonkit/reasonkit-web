@@ -1,0 +1,61 @@
+[Unit]
+Description=ReasonKit Web - Web Sensing & Browser Automation Layer
+Documentation=https://reasonkit.sh/docs
+After=network-online.target
+Wants=network-online.target
+StartLimitIntervalSec=60
+StartLimitBurst=3
+
+[Service]
+Type=simple
+User=reasonkit
+Group=reasonkit
+
+# Binary location
+ExecStart=/opt/reasonkit/bin/reasonkit-web serve
+
+# Environment
+EnvironmentFile=-/etc/reasonkit/reasonkit-web.env
+
+# Working directory
+WorkingDirectory=/var/lib/reasonkit
+
+# Resource limits
+LimitNOFILE=65536
+LimitNPROC=4096
+MemoryMax=2G
+CPUQuota=200%
+
+# Security hardening
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=no
+PrivateDevices=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+RestrictNamespaces=yes
+RestrictRealtime=yes
+RestrictSUIDSGID=yes
+LockPersonality=yes
+
+# Read-write paths needed
+ReadWritePaths=/var/lib/reasonkit /var/log/reasonkit /run/reasonkit /tmp
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=reasonkit-web
+
+# Restart policy
+Restart=on-failure
+RestartSec=5s
+
+# Timeout settings
+TimeoutStartSec=30
+TimeoutStopSec=30
+
+[Install]
+WantedBy=multi-user.target

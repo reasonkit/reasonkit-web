@@ -117,6 +117,28 @@ impl CaptureOptions {
             ..Default::default()
         }
     }
+
+    /// Validate capture request options
+    pub fn validate(&self) -> std::result::Result<(), String> {
+        // Quality must be in valid range
+        if self.quality > 100 {
+            return Err("Quality must be between 0 and 100".to_string());
+        }
+
+        // Width/height constraints
+        if let Some(w) = self.width {
+            if w == 0 || w > 16384 {
+                return Err("Width must be between 1 and 16384".to_string());
+            }
+        }
+        if let Some(h) = self.height {
+            if h == 0 || h > 16384 {
+                return Err("Height must be between 1 and 16384".to_string());
+            }
+        }
+
+        Ok(())
+    }
 }
 
 /// Result of a capture operation
@@ -377,6 +399,10 @@ impl PageCapture {
 mod tests {
     use super::*;
 
+    // ========================================================================
+    // CaptureOptions Tests
+    // ========================================================================
+
     #[test]
     fn test_capture_options_default() {
         let opts = CaptureOptions::default();
@@ -384,6 +410,9 @@ mod tests {
         assert_eq!(opts.quality, 85);
         assert!(opts.full_page);
         assert!(!opts.as_base64);
+        assert!(opts.width.is_none());
+        assert!(opts.height.is_none());
+        assert!(opts.clip_selector.is_none());
     }
 
     #[test]
@@ -397,20 +426,119 @@ mod tests {
 
         let pdf = CaptureOptions::pdf();
         assert_eq!(pdf.format, CaptureFormat::Pdf);
+
+        let mhtml = CaptureOptions::mhtml();
+        assert_eq!(mhtml.format, CaptureFormat::Mhtml);
+
+        let html = CaptureOptions::html();
+        assert_eq!(html.format, CaptureFormat::Html);
     }
 
     #[test]
-    fn test_capture_result_mime_type() {
-        let result = CaptureResult {
-            data: vec![],
+    fn test_validate_capture_request_valid() {
+        let opts = CaptureOptions {
             format: CaptureFormat::Png,
-            base64: None,
-            width: None,
-            height: None,
-            size: 0,
+            quality: 85,
+            full_page: true,
+            width: Some(1920),
+            height: Some(1080),
+            clip_selector: None,
+            as_base64: false,
         };
-        assert_eq!(result.mime_type(), "image/png");
-        assert_eq!(result.extension(), "png");
+        assert!(opts.validate().is_ok());
+    }
+
+    #[test]
+    fn test_validate_capture_request_valid_minimal() {
+        let opts = CaptureOptions::default();
+        assert!(opts.validate().is_ok());
+    }
+
+    #[test]
+    fn test_validate_capture_request_quality_too_high() {
+        let mut opts = CaptureOptions::default();
+        opts.quality = 101;
+        let result = opts.validate();
+        assert!(result.is_err());
+        assert!(result.unwrap_err().contains("Quality"));
+    }
+
+    #[test]
+    fn test_validate_capture_request_width_too_large() {
+        let mut opts = CaptureOptions::default();
+        opts.width = Some(20000);
+        let result = opts.validate();
+        assert!(result.is_err());
+        assert!(result.unwrap_err().contains("Width"));
+    }
+
+    #[test]
+    fn test_validate_capture_request_height_zero() {
+        let mut opts = CaptureOptions::default();
+        opts.height = Some(0);
+        let result = opts.validate();
+        assert!(result.is_err());
+        assert!(result.unwrap_err().contains("Height"));
+    }
+
+    #[test]
+    fn test_validate_capture_request_max_dimensions() {
+        let mut opts = CaptureOptions::default();
+        opts.width = Some(16384);
+        opts.height = Some(16384);
+        assert!(opts.validate().is_ok());
+    }
+
+    // ========================================================================
+    // CaptureResult Tests
+    // ========================================================================
+
+    #[test]
+    fn test_capture_result_mime_type() {
+        let formats_and_mimes = [
+            (CaptureFormat::Png, "image/png"),
+            (CaptureFormat::Jpeg, "image/jpeg"),
+            (CaptureFormat::Webp, "image/webp"),
+            (CaptureFormat::Pdf, "application/pdf"),
+            (CaptureFormat::Mhtml, "multipart/related"),
+            (CaptureFormat::Html, "text/html"),
+        ];
+
+        for (format, expected_mime) in formats_and_mimes {
+            let result = CaptureResult {
+                data: vec![],
+                format,
+                base64: None,
+                width: None,
+                height: None,
+                size: 0,
+            };
+            assert_eq!(result.mime_type(), expected_mime);
+        }
+    }
+
+    #[test]
+    fn test_capture_result_extension() {
+        let formats_and_exts = [
+            (CaptureFormat::Png, "png"),
+            (CaptureFormat::Jpeg, "jpg"),
+            (CaptureFormat::Webp, "webp"),
+            (CaptureFormat::Pdf, "pdf"),
+            (CaptureFormat::Mhtml, "mhtml"),
+            (CaptureFormat::Html, "html"),
+        ];
+
+        for (format, expected_ext) in formats_and_exts {
+            let result = CaptureResult {
+                data: vec![],
+                format,
+                base64: None,
+                width: None,
+                height: None,
+                size: 0,
+            };
+            assert_eq!(result.extension(), expected_ext);
+        }
     }
 
     #[test]
@@ -424,5 +552,167 @@ mod tests {
             size: 5,
         };
         assert_eq!(result.to_base64(), "aGVsbG8=");
+    }
+
+    #[test]
+    fn test_capture_result_base64_empty() {
+        let result = CaptureResult {
+            data: vec![],
+            format: CaptureFormat::Png,
+            base64: None,
+            width: None,
+            height: None,
+            size: 0,
+        };
+        assert_eq!(result.to_base64(), "");
+    }
+
+    #[test]
+    fn test_capture_result_base64_binary() {
+        let result = CaptureResult {
+            data: vec![0x89, 0x50, 0x4E, 0x47], // PNG header
+            format: CaptureFormat::Png,
+            base64: None,
+            width: None,
+            height: None,
+            size: 4,
+        };
+        let b64 = result.to_base64();
+        assert!(!b64.is_empty());
+        // Verify it decodes back correctly
+        let decoded = BASE64.decode(&b64).unwrap();
+        assert_eq!(decoded, vec![0x89, 0x50, 0x4E, 0x47]);
+    }
+
+    #[test]
+    fn test_capture_result_with_dimensions() {
+        let result = CaptureResult {
+            data: vec![1, 2, 3],
+            format: CaptureFormat::Png,
+            base64: None,
+            width: Some(1920),
+            height: Some(1080),
+            size: 3,
+        };
+        assert_eq!(result.width, Some(1920));
+        assert_eq!(result.height, Some(1080));
+        assert_eq!(result.size, 3);
+    }
+
+    #[test]
+    fn test_capture_result_with_precomputed_base64() {
+        let result = CaptureResult {
+            data: b"hello".to_vec(),
+            format: CaptureFormat::Png,
+            base64: Some("precomputed".to_string()),
+            width: None,
+            height: None,
+            size: 5,
+        };
+        // base64 field is stored separately from to_base64() computation
+        assert_eq!(result.base64, Some("precomputed".to_string()));
+        // to_base64() still computes from data
+        assert_eq!(result.to_base64(), "aGVsbG8=");
+    }
+
+    // ========================================================================
+    // CaptureFormat Tests
+    // ========================================================================
+
+    #[test]
+    fn test_capture_format_default() {
+        let format = CaptureFormat::default();
+        assert_eq!(format, CaptureFormat::Png);
+    }
+
+    #[test]
+    fn test_capture_format_serialization() {
+        let format = CaptureFormat::Jpeg;
+        let json = serde_json::to_string(&format).unwrap();
+        assert_eq!(json, "\"jpeg\"");
+
+        let deserialized: CaptureFormat = serde_json::from_str(&json).unwrap();
+        assert_eq!(deserialized, CaptureFormat::Jpeg);
+    }
+
+    #[test]
+    fn test_capture_format_all_variants_serialize() {
+        let formats = [
+            (CaptureFormat::Png, "\"png\""),
+            (CaptureFormat::Jpeg, "\"jpeg\""),
+            (CaptureFormat::Webp, "\"webp\""),
+            (CaptureFormat::Pdf, "\"pdf\""),
+            (CaptureFormat::Mhtml, "\"mhtml\""),
+            (CaptureFormat::Html, "\"html\""),
+        ];
+
+        for (format, expected_json) in formats {
+            let json = serde_json::to_string(&format).unwrap();
+            assert_eq!(json, expected_json);
+        }
+    }
+
+    #[test]
+    fn test_capture_format_equality() {
+        assert_eq!(CaptureFormat::Png, CaptureFormat::Png);
+        assert_ne!(CaptureFormat::Png, CaptureFormat::Jpeg);
+    }
+
+    #[test]
+    fn test_capture_format_clone() {
+        let format = CaptureFormat::Webp;
+        let cloned = format.clone();
+        assert_eq!(format, cloned);
+    }
+
+    // ========================================================================
+    // CaptureOptions Serialization Tests
+    // ========================================================================
+
+    #[test]
+    fn test_capture_options_serialization() {
+        let opts = CaptureOptions {
+            format: CaptureFormat::Jpeg,
+            quality: 90,
+            full_page: false,
+            width: Some(800),
+            height: Some(600),
+            clip_selector: Some("#main".to_string()),
+            as_base64: true,
+        };
+
+        let json = serde_json::to_string(&opts).unwrap();
+        assert!(json.contains("\"jpeg\""));
+        assert!(json.contains("90"));
+        assert!(json.contains("#main"));
+
+        let deserialized: CaptureOptions = serde_json::from_str(&json).unwrap();
+        assert_eq!(deserialized.format, CaptureFormat::Jpeg);
+        assert_eq!(deserialized.quality, 90);
+        assert!(!deserialized.full_page);
+        assert!(deserialized.as_base64);
+    }
+
+    #[test]
+    fn test_capture_options_deserialize_with_defaults() {
+        let json = r#"{"format": "png"}"#;
+        let opts: CaptureOptions = serde_json::from_str(json).unwrap();
+
+        // Check defaults are applied
+        assert_eq!(opts.format, CaptureFormat::Png);
+        assert_eq!(opts.quality, 85); // default
+        assert!(opts.full_page); // default true
+        assert!(!opts.as_base64); // default false
+    }
+
+    #[test]
+    fn test_capture_options_jpeg_quality_boundary() {
+        let opts_min = CaptureOptions::jpeg(0);
+        assert_eq!(opts_min.quality, 0);
+        assert!(opts_min.validate().is_ok());
+
+        let opts_max = CaptureOptions::jpeg(100);
+        assert_eq!(opts_max.quality, 100);
+        assert!(opts_max.validate().is_ok());
     }
 }
