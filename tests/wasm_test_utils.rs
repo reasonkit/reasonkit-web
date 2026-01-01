@@ -29,7 +29,8 @@ pub fn create_element(tag: &str, id: Option<&str>, class: Option<&str>) -> Eleme
     }
 
     if let Some(class_val) = class {
-        el.set_attribute("class", class_val).expect("should set class");
+        el.set_attribute("class", class_val)
+            .expect("should set class");
     }
 
     el
@@ -128,12 +129,10 @@ pub fn assert_element_exists(selector: &str, expected_text: Option<&str>) {
 
 /// Assert element does not exist
 pub fn assert_element_not_exists(selector: &str) {
-    let result = document().query_selector(selector).expect("query should not fail");
-    assert!(
-        result.is_none(),
-        "Element '{}' should not exist",
-        selector
-    );
+    let result = document()
+        .query_selector(selector)
+        .expect("query should not fail");
+    assert!(result.is_none(), "Element '{}' should not exist", selector);
 }
 
 /// Get computed style property
@@ -165,10 +164,7 @@ pub fn set_input_value(element: &Element, value: &str) {
 
 /// Get current timestamp in milliseconds
 pub fn timestamp_ms() -> f64 {
-    window()
-        .performance()
-        .expect("performance API")
-        .now()
+    window().performance().expect("performance API").now()
 }
 
 /// Measure execution time of async operation

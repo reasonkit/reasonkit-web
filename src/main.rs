@@ -36,15 +36,9 @@ fn main() {
     let args = Args::parse();
 
     // Initialize tracing
-    let filter = if args.verbose {
-        "debug"
-    } else {
-        "info"
-    };
+    let filter = if args.verbose { "debug" } else { "info" };
 
-    tracing_subscriber::fmt()
-        .with_env_filter(filter)
-        .init();
+    tracing_subscriber::fmt().with_env_filter(filter).init();
 
     tracing::info!(
         "ReasonKit Web MCP Server starting on {}:{}",

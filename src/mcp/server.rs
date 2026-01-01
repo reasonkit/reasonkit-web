@@ -110,7 +110,10 @@ impl McpServer {
     ///
     /// - `Ok(())` if authentication succeeds or is not required
     /// - `Err(JsonRpcResponse)` with authentication error if validation fails
-    fn validate_auth(&self, request: &JsonRpcRequest) -> std::result::Result<(), Box<JsonRpcResponse>> {
+    fn validate_auth(
+        &self,
+        request: &JsonRpcRequest,
+    ) -> std::result::Result<(), Box<JsonRpcResponse>> {
         let expected_token = match &self.auth_token {
             Some(token) => token,
             None => return Ok(()), // No auth required if token not configured

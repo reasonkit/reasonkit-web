@@ -84,7 +84,8 @@ mod dom_tests {
         div.set_attribute("id", "rk-wasm-test-div")
             .expect("should set id");
 
-        body.append_child(&div).expect("should append child to body");
+        body.append_child(&div)
+            .expect("should append child to body");
 
         let retrieved = document.get_element_by_id("rk-wasm-test-div");
         assert!(retrieved.is_some());
@@ -123,7 +124,8 @@ mod dom_tests {
         let body = document.body().expect("document should have a body");
 
         let div = document.create_element("div").expect("create div");
-        div.set_attribute("class", "rk-query-test").expect("set class");
+        div.set_attribute("class", "rk-query-test")
+            .expect("set class");
         div.set_inner_html("Query Target");
 
         body.append_child(&div).expect("append");
@@ -207,7 +209,9 @@ mod dom_tests {
         class_list.add_1("rk-active").expect("add class");
         assert!(class_list.contains("rk-active"));
 
-        class_list.add_2("rk-visible", "rk-primary").expect("add multiple");
+        class_list
+            .add_2("rk-visible", "rk-primary")
+            .expect("add multiple");
         assert!(class_list.contains("rk-visible"));
         assert!(class_list.contains("rk-primary"));
 
@@ -240,7 +244,9 @@ mod dom_tests {
         let body = document.body().expect("document should have a body");
 
         let parent = document.create_element("div").expect("create parent");
-        parent.set_attribute("id", "rk-parent-test").expect("set id");
+        parent
+            .set_attribute("id", "rk-parent-test")
+            .expect("set id");
 
         let child = document.create_element("span").expect("create child");
         child.set_text_content(Some("Child Element"));
@@ -284,8 +290,8 @@ mod fetch_tests {
         let window = web_sys::window().expect("no global window");
 
         // Using httpbin for testing - a reliable echo service
-        let request = create_request("https://httpbin.org/get", "GET")
-            .expect("should create request");
+        let request =
+            create_request("https://httpbin.org/get", "GET").expect("should create request");
 
         let resp_value = JsFuture::from(window.fetch_with_request(&request))
             .await
@@ -333,8 +339,7 @@ mod fetch_tests {
         let json_value = JsFuture::from(json_promise).await.expect("parse json");
 
         // Verify the response contains our data
-        let data = Reflect::get(&json_value, &JsValue::from_str("data"))
-            .expect("get data field");
+        let data = Reflect::get(&json_value, &JsValue::from_str("data")).expect("get data field");
         assert!(data.is_string());
     }
 
@@ -361,8 +366,8 @@ mod fetch_tests {
     async fn test_fetch_text_response() {
         let window = web_sys::window().expect("no global window");
 
-        let request = create_request("https://httpbin.org/robots.txt", "GET")
-            .expect("create request");
+        let request =
+            create_request("https://httpbin.org/robots.txt", "GET").expect("create request");
 
         let resp_value = JsFuture::from(window.fetch_with_request(&request))
             .await
@@ -383,8 +388,8 @@ mod fetch_tests {
         let window = web_sys::window().expect("no global window");
 
         // Test 404 status
-        let request = create_request("https://httpbin.org/status/404", "GET")
-            .expect("create request");
+        let request =
+            create_request("https://httpbin.org/status/404", "GET").expect("create request");
 
         let resp_value = JsFuture::from(window.fetch_with_request(&request))
             .await
@@ -401,8 +406,7 @@ mod fetch_tests {
         let window = web_sys::window().expect("no global window");
 
         // Create an AbortController for timeout
-        let abort_controller =
-            web_sys::AbortController::new().expect("create abort controller");
+        let abort_controller = web_sys::AbortController::new().expect("create abort controller");
         let signal = abort_controller.signal();
 
         let mut opts = RequestInit::new();
@@ -439,8 +443,8 @@ mod fetch_tests {
         let window = web_sys::window().expect("no global window");
 
         // httpbin redirects to /get
-        let request = create_request("https://httpbin.org/redirect/1", "GET")
-            .expect("create request");
+        let request =
+            create_request("https://httpbin.org/redirect/1", "GET").expect("create request");
 
         let resp_value = JsFuture::from(window.fetch_with_request(&request))
             .await
@@ -797,7 +801,9 @@ mod storage_tests {
 
         // Store JSON string
         let json_data = r#"{"component":"browser-connector","version":"0.1.0","enabled":true}"#;
-        storage.set_item("rk-json-config", json_data).expect("set json");
+        storage
+            .set_item("rk-json-config", json_data)
+            .expect("set json");
 
         let retrieved = storage.get_item("rk-json-config").expect("get json");
         assert_eq!(retrieved, Some(json_data.to_string()));
@@ -949,8 +955,8 @@ mod event_tests {
     fn test_mouse_event_creation() {
         let init = web_sys::MouseEventInit::new();
 
-        let event = MouseEvent::new_with_mouse_event_init_dict("click", &init)
-            .expect("create mouse event");
+        let event =
+            MouseEvent::new_with_mouse_event_init_dict("click", &init).expect("create mouse event");
 
         assert_eq!(event.type_(), "click");
         assert_eq!(event.button(), 0); // Left button
@@ -963,19 +969,22 @@ mod event_tests {
         // Create a JS object for detail
         let detail = js_sys::Object::new();
         js_sys::Reflect::set(&detail, &"action".into(), &"capture".into()).expect("set action");
-        js_sys::Reflect::set(&detail, &"timestamp".into(), &JsValue::from_f64(1234567890.0))
-            .expect("set timestamp");
+        js_sys::Reflect::set(
+            &detail,
+            &"timestamp".into(),
+            &JsValue::from_f64(1234567890.0),
+        )
+        .expect("set timestamp");
 
         init.detail(&detail);
 
-        let event = CustomEvent::new_with_event_init_dict("rk-action", &init)
-            .expect("create event");
+        let event =
+            CustomEvent::new_with_event_init_dict("rk-action", &init).expect("create event");
 
         let retrieved_detail = event.detail();
         assert!(retrieved_detail.is_object());
 
-        let action = js_sys::Reflect::get(&retrieved_detail, &"action".into())
-            .expect("get action");
+        let action = js_sys::Reflect::get(&retrieved_detail, &"action".into()).expect("get action");
         assert_eq!(action.as_string(), Some("capture".to_string()));
     }
 }
