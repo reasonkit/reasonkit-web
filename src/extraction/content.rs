@@ -304,8 +304,8 @@ impl ContentExtractor {
         let code_re = regex::Regex::new(r"<code[^>]*>(.*?)</code>").unwrap();
         md = code_re.replace_all(&md, "`$1`").to_string();
 
-        // Convert pre blocks
-        let pre_re = regex::Regex::new(r"<pre[^>]*>(.*?)</pre>").unwrap();
+        // Convert pre blocks (use [\s\S]*? to match across newlines)
+        let pre_re = regex::Regex::new(r"<pre[^>]*>([\s\S]*?)</pre>").unwrap();
         md = pre_re.replace_all(&md, "```\n$1\n```").to_string();
 
         // Convert lists

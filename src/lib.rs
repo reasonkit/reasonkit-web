@@ -28,9 +28,26 @@
 #![warn(clippy::all)]
 
 pub mod browser;
+pub mod buffer;
+pub mod cors;
 pub mod error;
 pub mod extraction;
+pub mod handlers;
 pub mod mcp;
+pub mod metrics;
+pub mod processing;
+pub mod shutdown;
+
+/// Crate version
+pub const VERSION: &str = env!("CARGO_PKG_VERSION");
+
+/// Crate name
+pub const NAME: &str = env!("CARGO_PKG_NAME");
+
+/// Generate a unique request ID (UUID v4)
+pub fn generate_request_id() -> String {
+    uuid::Uuid::new_v4().to_string()
+}
 
 // Re-export key components for convenience
 pub use browser::controller::BrowserController;
@@ -38,6 +55,7 @@ pub use error::Error;
 pub use extraction::content::ContentExtractor;
 pub use extraction::links::LinkExtractor;
 pub use extraction::metadata::MetadataExtractor;
+pub use mcp::McpServer;
 
 /// Configuration defaults
 pub mod config {

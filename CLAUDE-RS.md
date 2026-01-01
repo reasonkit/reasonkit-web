@@ -1,11 +1,11 @@
-# ReasonKit-WEB-RS PROJECT CONTEXT
+# ReasonKit-WEB PROJECT CONTEXT
 
 > MCP Sidecar for Web Sensing | Pure Rust Implementation
 > "Designed, Not Dreamed" | Browser Capture Without Node.js
 
 **LICENSE:** Apache 2.0 (Open Source)
 **STATUS:** Active Development
-**WEBSITE:** <https://reasonkit.sh/docs/web-rs>
+**WEBSITE:** <https://reasonkit.sh/docs/web>
 
 ---
 
@@ -13,20 +13,20 @@
 
 ```
 +---------------------------------------------------------------------------+
-|                       REASONKIT-WEB-RS STATUS                              |
+|                       REASONKIT-WEB STATUS                                |
 +---------------------------------------------------------------------------+
-|  Name:        reasonkit-web-rs                                             |
-|  Role:        MCP Sidecar for Web Sensing                                  |
-|  Status:      Active Development                                           |
-|  License:     Apache 2.0                                                   |
-|  Language:    Rust 1.74+                                                   |
-|  Framework:   Axum 0.7                                                     |
+|  Name:        reasonkit-web                                               |
+|  Role:        MCP Sidecar for Web Sensing                                 |
+|  Status:      Active Development                                          |
+|  License:     Apache 2.0                                                  |
+|  Language:    Rust 1.74+                                                  |
+|  Framework:   Axum 0.7                                                    |
 +---------------------------------------------------------------------------+
 ```
 
 ### Purpose
 
-ReasonKit-web-rs is a **pure Rust MCP (Model Context Protocol) sidecar** that provides browser capture and web sensing capabilities. It runs alongside AI agents to enable:
+ReasonKit-web is a **pure Rust MCP (Model Context Protocol) sidecar** that provides browser capture and web sensing capabilities. It runs alongside AI agents to enable:
 
 - **Browser Content Capture** - Extract and process web page content
 - **DOM Analysis** - Parse and analyze document structure
@@ -84,7 +84,7 @@ SECRETS:
 ## PROJECT STRUCTURE
 
 ```
-reasonkit-web-rs/
+reasonkit-web/
 +-- Cargo.toml              # Crate manifest
 +-- Cargo.lock              # Dependency lockfile
 +-- src/
@@ -169,7 +169,7 @@ cargo run
 RUST_LOG=debug cargo run
 
 # Run release build
-REASONKIT_WEB_TOKEN=your-token ./target/release/reasonkit-web-rs
+REASONKIT_WEB_TOKEN=your-token ./target/release/reasonkit-web
 ```
 
 ### Quality Gates (CONS-009)
@@ -211,7 +211,7 @@ Type=simple
 User=reasonkit
 Group=reasonkit
 EnvironmentFile=/etc/reasonkit/reasonkit-web.env
-ExecStart=/usr/local/bin/reasonkit-web-rs
+ExecStart=/usr/local/bin/reasonkit-web
 Restart=always
 RestartSec=5
 
@@ -483,7 +483,7 @@ File: CLAUDE.md
 Version: 1.0.0
 Last Updated: 2026-01-01
 Changelog:
-  - v1.0.0 - Initial CLAUDE.md for reasonkit-web-rs
+  - v1.0.0 - Initial CLAUDE.md for reasonkit-web
     - Project identity and technology stack
     - Hard constraints and security requirements
     - Development commands and deployment

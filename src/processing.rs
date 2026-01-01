@@ -322,13 +322,11 @@ impl ContentProcessor {
 
         // Replace non-breaking spaces and other special whitespace with regular space
         result = result
-            .replace('\u{00A0}', " ") // NBSP
-            .replace('\u{2002}', " ") // EN SPACE
-            .replace('\u{2003}', " ") // EM SPACE
-            .replace('\u{2009}', " ") // THIN SPACE
-            .replace('\u{200A}', " ") // HAIR SPACE
-            .replace('\u{200B}', "") // ZERO WIDTH SPACE
-            .replace('\u{FEFF}', ""); // BOM
+            .replace(
+                ['\u{00A0}', '\u{2002}', '\u{2003}', '\u{2009}', '\u{200A}'],
+                " ",
+            )
+            .replace(['\u{200B}', '\u{FEFF}'], ""); // Zero-width space and BOM
 
         // Replace tabs with spaces
         result = result.replace('\t', " ");

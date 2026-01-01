@@ -48,7 +48,7 @@ use axum::Json;
 use hdrhistogram::Histogram;
 use parking_lot::RwLock;
 use serde::{Deserialize, Serialize};
-use sysinfo::{Pid, System};
+use sysinfo::{Pid, ProcessesToUpdate, System};
 use tracing::{debug, instrument};
 
 /// Server version from Cargo.toml
@@ -113,7 +113,7 @@ pub struct StatusResponse {
 }
 
 /// Memory usage metrics collected from sysinfo.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
 pub struct MemoryMetrics {
     /// Resident Set Size - actual physical memory used (bytes)
     pub rss_bytes: u64,
@@ -124,16 +124,6 @@ pub struct MemoryMetrics {
     /// CPU usage percentage (0.0 - 100.0)
     #[serde(skip_serializing_if = "Option::is_none")]
     pub cpu_percent: Option<f32>,
-}
-
-impl Default for MemoryMetrics {
-    fn default() -> Self {
-        Self {
-            rss_bytes: 0,
-            virtual_bytes: 0,
-            cpu_percent: None,
-        }
-    }
 }
 
 /// Request latency percentile metrics.
@@ -470,8 +460,8 @@ fn collect_memory_metrics() -> MemoryMetrics {
     let mut system = System::new();
 
     // Refresh only the current process with memory info
-    // sysinfo 0.30 API: refresh_process instead of refresh_process_specifics
-    system.refresh_process(pid);
+    // sysinfo 0.33 API: refresh_processes with ProcessesToUpdate
+    system.refresh_processes(ProcessesToUpdate::Some(&[pid]), true);
 
     match system.process(pid) {
         Some(process) => MemoryMetrics {
@@ -699,7 +689,12 @@ mod tests {
 
         assert_eq!(histogram.count(), 5);
         assert!(histogram.mean() > 0.0);
-        assert_eq!(histogram.max(), 50000);
+        // HDRHistogram uses bucketing with some precision loss, so max may be slightly higher
+        let max = histogram.max();
+        assert!(
+            max >= 50000 && max <= 51000,
+            "max should be ~50000, got {max}"
+        );
 
         let metrics = histogram.metrics();
         assert!(metrics.p50_ms > 0.0);

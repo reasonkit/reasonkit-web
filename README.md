@@ -25,23 +25,98 @@ Web sensing and browser automation layer for ReasonKit. Implements the Model Con
 
 ## Features
 
-![ReasonKit Web Features](./brand/readme-assets/features.png)
+![ReasonKit Web Features](./brand/readme/features.png)
+
+## Use Cases
+
+![ReasonKit Web Use Cases](./brand/readme/use_cases.png)
+
+## Performance
+
+![ReasonKit Web Performance Benchmark](./brand/readme/performance_benchmark.png)
+
+## Installation
+
+Add to your `Cargo.toml`:
+
+```toml
+[dependencies]
+reasonkit-web = "0.1"
+tokio = { version = "1", features = ["full"] }
+```
 
 ## Quick Start
 
+### As a Library
+
+```rust,ignore
+use reasonkit_web::BrowserController;
+
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    // Create browser controller
+    let controller = BrowserController::new().await?;
+
+    // Navigate to a page
+    let page = controller.navigate("https://example.com").await?;
+
+    // Extract content
+    let content = page.content().await?;
+    println!("Page content: {}", content);
+
+    Ok(())
+}
+```
+
+### As an MCP Server
+
 ```bash
-# Build the server
+# Build the MCP server binary
 cargo build --release
 
 # Run the MCP server
 ./target/release/reasonkit-web
+
+# Or with cargo
+cargo run --release
 ```
+
+### Content Extraction
+
+```rust,ignore
+use reasonkit_web::{ContentExtractor, MetadataExtractor};
+
+// Extract structured content from HTML
+let html = "<html><body><h1>Title</h1><p>Content</p></body></html>";
+let extractor = ContentExtractor::new();
+let content = extractor.extract(html)?;
+
+// Extract metadata
+let meta_extractor = MetadataExtractor::new();
+let metadata = meta_extractor.extract(html)?;
+```
+
+### API Workflow
+
+![ReasonKit Web API Workflow](./brand/readme/api_workflow.png)
+
+![ReasonKit Web API Sequence](./brand/readme/api_flow.png)
 
 ## Architecture
 
 The ReasonKit Web layer implements a high-performance web sensing architecture designed for AI reasoning systems:
 
-![ReasonKit Web Architecture Diagram](./brand/readme-assets/architecture.png)
+### System Topology
+
+![ReasonKit Web MCP Topology](./brand/readme/mcp_topology.png)
+
+### Core Architecture
+
+![ReasonKit Web Architecture Diagram](./brand/readme/architecture.png)
+
+### The Rust Engine
+
+![ReasonKit Web Rust Engine](./brand/readme/rust_engine.png)
 
 ### Key Design Principles
 
@@ -52,7 +127,19 @@ The ReasonKit Web layer implements a high-performance web sensing architecture d
 
 ### Integration Flow
 
-![ReasonKit Web Integration Flow](./brand/readme-assets/integration_flow.png)
+![ReasonKit Web Integration Flow](./brand/readme/integration_flow.png)
+
+## Security & Privacy
+
+ReasonKit Web is built with a "GDPR by Default" philosophy, ensuring that AI reasoning systems can interact with the web safely and compliantly.
+
+![ReasonKit Web Browser Isolation Layer](./brand/readme/browser_isolation_layer.svg)
+![ReasonKit Web Security Shield](./brand/readme/security_shield.png)
+
+### Key Security Features
+- **PII Redaction Engine**: Automatically detects and redacts sensitive information (emails, phone numbers, secrets) before it leaves the secure runtime.
+- **Headless Isolation**: Browser sessions run in isolated containers with no persistent state.
+- **Content Sanitization**: Malicious scripts and trackers are stripped at the DOM level.
 
 For detailed technical specifications, see [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 
@@ -60,12 +147,7 @@ For detailed technical specifications, see [`docs/ARCHITECTURE.md`](docs/ARCHITE
 
 ## Technology Stack
 
-| Component         | Technology    | Purpose               |
-| ----------------- | ------------- | --------------------- |
-| **Browser**       | ChromiumOxide | Async Rust CDP client |
-| **MCP Server**    | mcp-sdk-rs    | AI agent integration  |
-| **Runtime**       | Tokio         | Async runtime         |
-| **Serialization** | Serde         | JSON handling         |
+![ReasonKit Web Technology Stack](./brand/readme/tech_stack.png)
 
 ## License
 
@@ -74,6 +156,8 @@ Apache License 2.0 - see [LICENSE](LICENSE)
 ---
 
 <div align="center">
+
+![ReasonKit Ecosystem Connection](./brand/readme/ecosystem_connection.png)
 
 **Part of the ReasonKit Ecosystem**
 

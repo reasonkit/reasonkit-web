@@ -1,4 +1,4 @@
-//! Server benchmarks for reasonkit-web-rs
+//! Server benchmarks for reasonkit-web
 //!
 //! These benchmarks measure HTTP server performance including
 //! request handling latency and throughput.

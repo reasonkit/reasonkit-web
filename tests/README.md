@@ -25,7 +25,7 @@ Comprehensive browser-based testing suite using `wasm-bindgen-test`.
 ### Headless Chrome (Recommended for CI)
 
 ```bash
-cd reasonkit-web-rs
+cd reasonkit-web
 wasm-pack test --headless --chrome
 ```
 
@@ -138,7 +138,7 @@ jobs:
 
       - name: Run WASM tests
         run: |
-          cd reasonkit-web-rs
+          cd reasonkit-web
           wasm-pack test --headless --chrome
 ```
 

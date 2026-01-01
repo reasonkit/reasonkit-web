@@ -19,23 +19,22 @@ mod feed_state_tests {
     fn test_feed_state_creation() {
         let state = FeedState::new(100);
         // State should be created with specified capacity
-        assert!(state.subscriber_count() == 0);
+        assert!(state.connected_clients() == 0);
     }
 
     #[test]
     fn test_feed_state_default_capacity() {
         let state = FeedState::new(1024);
         // Should handle default capacity
-        assert!(state.subscriber_count() == 0);
+        assert!(state.connected_clients() == 0);
     }
 
     #[tokio::test]
     async fn test_feed_state_subscribe() {
         let state = Arc::new(FeedState::new(100));
 
-        // Subscribe to feed
-        let receiver = state.subscribe();
-        assert!(receiver.is_some() || receiver.is_none()); // May or may not succeed based on capacity
+        // Subscribe to feed - returns Receiver directly
+        let _receiver = state.subscribe();
 
         // Subscriber count should reflect subscription
         // Note: actual count depends on implementation
@@ -56,8 +55,8 @@ mod feed_state_tests {
     async fn test_feed_event_processing_complete() {
         let state = Arc::new(FeedState::new(100));
 
-        // Publish processing complete event
-        state.publish_processing_complete("capture-123", 1500);
+        // Publish processing complete event (capture_id, duration_ms, size_bytes, summary)
+        state.publish_processing_complete("capture-123", 1500, 1024, None);
 
         // Event should be published without error
     }
@@ -66,8 +65,13 @@ mod feed_state_tests {
     async fn test_feed_event_error() {
         let state = Arc::new(FeedState::new(100));
 
-        // Publish error event
-        state.publish_error("capture-123", "Browser timeout");
+        // Publish error event (capture_id, code, message, recoverable)
+        state.publish_error(
+            Some("capture-123".to_string()),
+            "TIMEOUT",
+            "Browser timeout",
+            true,
+        );
 
         // Error event should be published without panic
     }
@@ -89,26 +93,23 @@ mod feed_state_tests {
         let state = Arc::new(FeedState::new(100));
 
         // Subscribe first
-        let receiver = state.subscribe();
+        let mut receiver = state.subscribe();
 
         // Then publish
         state.publish_capture_received("test-id", "https://test.com", "pdf");
 
-        // If we have a receiver, it should be able to receive the event
-        if let Some(mut rx) = receiver {
-            // Use timeout to avoid hanging
-            let result = tokio::time::timeout(Duration::from_millis(100), rx.recv()).await;
-            // Event may or may not be received depending on timing
-            match result {
-                Ok(Some(_event)) => {
-                    // Successfully received event
-                }
-                Ok(None) => {
-                    // Channel closed
-                }
-                Err(_) => {
-                    // Timeout - also acceptable in test
-                }
+        // Use timeout to avoid hanging
+        let result = tokio::time::timeout(Duration::from_millis(100), receiver.recv()).await;
+        // Event may or may not be received depending on timing
+        match result {
+            Ok(Ok(_event)) => {
+                // Successfully received event
+            }
+            Ok(Err(_)) => {
+                // Lagged behind
+            }
+            Err(_) => {
+                // Timeout - also acceptable in test
             }
         }
     }
@@ -121,26 +122,22 @@ mod feed_state_tests {
 #[cfg(test)]
 mod feed_event_tests {
     use super::*;
+    use reasonkit_web::handlers::feed::{CaptureReceivedData, ErrorData, ProcessingCompleteData};
 
     #[test]
     fn test_feed_event_capture_received_structure() {
-        let event = FeedEvent::CaptureReceived {
-            id: "capture-001".to_string(),
+        let event = FeedEvent::CaptureReceived(CaptureReceivedData {
+            capture_id: "capture-001".to_string(),
             url: "https://example.com/page".to_string(),
             capture_type: "screenshot".to_string(),
-            timestamp: chrono::Utc::now(),
-        };
+            timestamp: 1234567890,
+        });
 
         match event {
-            FeedEvent::CaptureReceived {
-                id,
-                url,
-                capture_type,
-                ..
-            } => {
-                assert_eq!(id, "capture-001");
-                assert_eq!(url, "https://example.com/page");
-                assert_eq!(capture_type, "screenshot");
+            FeedEvent::CaptureReceived(data) => {
+                assert_eq!(data.capture_id, "capture-001");
+                assert_eq!(data.url, "https://example.com/page");
+                assert_eq!(data.capture_type, "screenshot");
             }
             _ => panic!("Expected CaptureReceived variant"),
         }
@@ -148,20 +145,17 @@ mod feed_event_tests {
 
     #[test]
     fn test_feed_event_processing_complete_structure() {
-        let event = FeedEvent::ProcessingComplete {
-            id: "capture-001".to_string(),
-            processing_time_ms: 2500,
-            timestamp: chrono::Utc::now(),
-        };
+        let event = FeedEvent::ProcessingComplete(ProcessingCompleteData {
+            capture_id: "capture-001".to_string(),
+            duration_ms: 2500,
+            size_bytes: 1024,
+            summary: None,
+        });
 
         match event {
-            FeedEvent::ProcessingComplete {
-                id,
-                processing_time_ms,
-                ..
-            } => {
-                assert_eq!(id, "capture-001");
-                assert_eq!(processing_time_ms, 2500);
+            FeedEvent::ProcessingComplete(data) => {
+                assert_eq!(data.capture_id, "capture-001");
+                assert_eq!(data.duration_ms, 2500);
             }
             _ => panic!("Expected ProcessingComplete variant"),
         }
@@ -169,16 +163,17 @@ mod feed_event_tests {
 
     #[test]
     fn test_feed_event_error_structure() {
-        let event = FeedEvent::Error {
-            id: "capture-001".to_string(),
-            error: "Navigation timeout".to_string(),
-            timestamp: chrono::Utc::now(),
-        };
+        let event = FeedEvent::Error(ErrorData {
+            capture_id: Some("capture-001".to_string()),
+            code: "TIMEOUT".to_string(),
+            message: "Navigation timeout".to_string(),
+            recoverable: true,
+        });
 
         match event {
-            FeedEvent::Error { id, error, .. } => {
-                assert_eq!(id, "capture-001");
-                assert_eq!(error, "Navigation timeout");
+            FeedEvent::Error(data) => {
+                assert_eq!(data.capture_id, Some("capture-001".to_string()));
+                assert_eq!(data.message, "Navigation timeout");
             }
             _ => panic!("Expected Error variant"),
         }
@@ -186,46 +181,48 @@ mod feed_event_tests {
 
     #[test]
     fn test_feed_event_serialization() {
-        let event = FeedEvent::CaptureReceived {
-            id: "test-123".to_string(),
+        let event = FeedEvent::CaptureReceived(CaptureReceivedData {
+            capture_id: "test-123".to_string(),
             url: "https://test.com".to_string(),
             capture_type: "html".to_string(),
-            timestamp: chrono::Utc::now(),
-        };
+            timestamp: 1234567890,
+        });
 
         let json = serde_json::to_string(&event).unwrap();
 
         // Verify JSON structure
-        assert!(json.contains("\"id\":\"test-123\""));
+        assert!(json.contains("\"capture_id\":\"test-123\""));
         assert!(json.contains("\"url\":\"https://test.com\""));
         assert!(json.contains("html"));
     }
 
     #[test]
     fn test_feed_event_processing_serialization() {
-        let event = FeedEvent::ProcessingComplete {
-            id: "proc-456".to_string(),
-            processing_time_ms: 1234,
-            timestamp: chrono::Utc::now(),
-        };
+        let event = FeedEvent::ProcessingComplete(ProcessingCompleteData {
+            capture_id: "proc-456".to_string(),
+            duration_ms: 1234,
+            size_bytes: 512,
+            summary: None,
+        });
 
         let json = serde_json::to_string(&event).unwrap();
 
-        assert!(json.contains("\"id\":\"proc-456\""));
+        assert!(json.contains("\"capture_id\":\"proc-456\""));
         assert!(json.contains("1234"));
     }
 
     #[test]
     fn test_feed_event_error_serialization() {
-        let event = FeedEvent::Error {
-            id: "err-789".to_string(),
-            error: "Connection refused".to_string(),
-            timestamp: chrono::Utc::now(),
-        };
+        let event = FeedEvent::Error(ErrorData {
+            capture_id: Some("err-789".to_string()),
+            code: "CONNECTION_ERROR".to_string(),
+            message: "Connection refused".to_string(),
+            recoverable: false,
+        });
 
         let json = serde_json::to_string(&event).unwrap();
 
-        assert!(json.contains("\"id\":\"err-789\""));
+        assert!(json.contains("\"capture_id\":\"err-789\""));
         assert!(json.contains("Connection refused"));
     }
 }

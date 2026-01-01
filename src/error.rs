@@ -6,7 +6,7 @@
 //! # Error Categories
 //!
 //! - [`WebError`] - HTTP-level errors with status codes and JSON responses
-//! - [`Error`] - Internal operation errors (browser, MCP, extraction)
+//! - [`enum@Error`] - Internal operation errors (browser, MCP, extraction)
 //! - Domain-specific errors: [`BrowserError`], [`McpError`], [`ExtractionError`], etc.
 //!
 //! # Example

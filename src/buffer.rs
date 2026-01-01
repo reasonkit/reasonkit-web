@@ -719,13 +719,13 @@ mod tests {
     #[tokio::test]
     async fn test_buffer_expired_cleanup() {
         let buffer = CaptureBuffer::builder()
-            .max_age(Duration::from_millis(50))
+            .max_age(Duration::from_secs(1)) // 1 second max age
             .build();
 
         buffer.push(create_test_record("https://example.com")).await;
 
-        // Wait for expiry
-        tokio::time::sleep(Duration::from_millis(100)).await;
+        // Wait for expiry (is_expired uses seconds, so need age > max_age in seconds)
+        tokio::time::sleep(Duration::from_millis(2100)).await;
 
         let removed = buffer.cleanup_expired().await;
         assert_eq!(removed, 1);
@@ -756,11 +756,18 @@ mod tests {
     async fn test_capture_record_is_expired() {
         let record = create_test_record("https://example.com");
 
-        // Should not be expired immediately
+        // Should not be expired immediately with long TTL
         assert!(!record.is_expired(Duration::from_secs(3600)));
 
-        // Should be expired with very short max age
-        assert!(record.is_expired(Duration::from_millis(0)));
+        // Should not be expired immediately even with 0 TTL (age=0 is not > 0)
+        assert!(!record.is_expired(Duration::from_millis(0)));
+
+        // Wait 1.1 seconds then check if expired with 0 TTL
+        tokio::time::sleep(Duration::from_millis(1100)).await;
+        assert!(
+            record.is_expired(Duration::from_millis(0)),
+            "Should be expired after 1 second with 0 TTL"
+        );
     }
 
     #[tokio::test]
@@ -853,8 +860,8 @@ mod tests {
     #[tokio::test]
     async fn test_cleanup_task_start_stop() {
         let buffer = shared_buffer_with_config(BufferConfig {
-            cleanup_interval: Duration::from_millis(50),
-            max_age: Duration::from_millis(25),
+            cleanup_interval: Duration::from_secs(1),
+            max_age: Duration::from_secs(1), // 1 second max age
             ..Default::default()
         });
 
@@ -865,8 +872,8 @@ mod tests {
         buffer.push(create_test_record("https://example.com")).await;
         assert_eq!(buffer.len().await, 1);
 
-        // Wait for cleanup to run
-        tokio::time::sleep(Duration::from_millis(100)).await;
+        // Wait for expiry and cleanup to run (need age > 1 second, plus time for cleanup)
+        tokio::time::sleep(Duration::from_secs(3)).await;
 
         // Record should be cleaned up
         assert_eq!(buffer.len().await, 0);

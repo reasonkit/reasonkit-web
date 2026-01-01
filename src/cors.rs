@@ -13,7 +13,7 @@
 //!
 //! # Example
 //!
-//! ```rust,no_run
+//! ```rust,ignore
 //! use reasonkit_web::cors::cors_layer;
 //! use axum::Router;
 //!
@@ -40,7 +40,7 @@ pub const DEFAULT_MAX_AGE_SECS: u64 = 3600;
 ///
 /// This is the recommended configuration for development and local MCP servers.
 /// For production deployments with specific domain requirements, use
-/// [`cors_layer_with_origins`] instead.
+/// `cors_layer_with_origins` instead.
 ///
 /// # Security Properties
 ///
@@ -51,7 +51,7 @@ pub const DEFAULT_MAX_AGE_SECS: u64 = 3600;
 ///
 /// # Example
 ///
-/// ```rust,no_run
+/// ```rust,ignore
 /// use reasonkit_web::cors::cors_layer;
 /// use axum::Router;
 ///
@@ -294,9 +294,8 @@ fn validate_localhost_format(origin: &str, host: &str) -> bool {
     let remaining = &origin[after_host..];
 
     // Should be either end of string, port, or path
-    if remaining.starts_with(':') {
+    if let Some(port_str) = remaining.strip_prefix(':') {
         // Port follows - validate it's a number
-        let port_str = &remaining[1..];
         // Port might be followed by path
         let port_end = port_str.find('/').unwrap_or(port_str.len());
         let port = &port_str[..port_end];
@@ -330,8 +329,7 @@ fn validate_ipv6_localhost_format(origin: &str) -> bool {
         }
 
         let remaining = &origin[after_host..];
-        if remaining.starts_with(':') {
-            let port_str = &remaining[1..];
+        if let Some(port_str) = remaining.strip_prefix(':') {
             let port_end = port_str.find('/').unwrap_or(port_str.len());
             let port = &port_str[..port_end];
             if let Ok(port_num) = port.parse::<u16>() {

@@ -9,7 +9,7 @@
 //! # Example
 //!
 //! ```rust,no_run
-//! use reasonkit_web::metrics::{global_metrics, MetricsServer};
+//! use reasonkit_web::metrics::global_metrics;
 //! use std::time::Duration;
 //!
 //! // Record a request
@@ -29,6 +29,7 @@ use std::time::{Duration, Instant};
 const MAX_HISTOGRAM_SAMPLES: usize = 1000;
 
 /// Default buckets for latency histograms (in milliseconds)
+#[allow(dead_code)]
 const DEFAULT_BUCKETS_MS: &[u64] = &[5, 10, 25, 50, 100, 250, 500, 1000, 2500, 5000, 10000];
 
 /// Metrics collection for ReasonKit Web observability
@@ -74,7 +75,7 @@ pub struct Metrics {
 
 /// Memory-efficient ring buffer for histogram samples
 #[derive(Debug)]
-struct RingBuffer<T> {
+pub struct RingBuffer<T> {
     data: Vec<T>,
     capacity: usize,
     /// Position of next write (wraps around)
@@ -83,6 +84,7 @@ struct RingBuffer<T> {
     total_samples: u64,
 }
 
+#[allow(dead_code)]
 impl<T: Clone + Ord> RingBuffer<T> {
     fn new(capacity: usize) -> Self {
         Self {
@@ -126,6 +128,12 @@ impl<T: Clone + Ord> RingBuffer<T> {
         let sorted = self.sorted_samples();
         let idx = ((sorted.len() as f64 - 1.0) * p).round() as usize;
         sorted.get(idx).cloned()
+    }
+}
+
+impl Default for Metrics {
+    fn default() -> Self {
+        Self::new()
     }
 }
 
@@ -308,12 +316,12 @@ pub static METRICS: OnceLock<Metrics> = OnceLock::new();
 
 /// Get or initialize the global metrics instance
 pub fn global_metrics() -> &'static Metrics {
-    METRICS.get_or_init(|| Metrics::new())
+    METRICS.get_or_init(Metrics::new)
 }
 
 /// Initialize global metrics (call once at startup)
 pub fn init() {
-    let _ = METRICS.get_or_init(|| Metrics::new());
+    let _ = METRICS.get_or_init(Metrics::new);
 
     // Initialize start time
     if let Ok(mut start_time) = global_metrics().start_time.write() {

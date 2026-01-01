@@ -1,4 +1,4 @@
-//! Content processing benchmarks for reasonkit-web-rs
+//! Content processing benchmarks for reasonkit-web
 //!
 //! These benchmarks measure content processing performance including
 //! HTML parsing, text extraction, and content normalization.

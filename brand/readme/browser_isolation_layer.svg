@@ -1,0 +1,77 @@
+<svg width="800" height="500" viewBox="0 0 800 500" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="glowGreen" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <style>
+    .bg { fill: #030508; }
+    .container { fill: #0a0d14; stroke: #1f2937; stroke-width: 2; rx: 12; }
+    .browser-chrome { fill: #111827; }
+    .label { font-family: 'JetBrains Mono', monospace; font-size: 14px; fill: #9ca3af; }
+    .title { font-family: 'Inter', sans-serif; font-weight: 700; font-size: 18px; fill: #f9fafb; }
+    .pii-redacted { fill: #1f2937; opacity: 0.8; }
+    .pii-text { fill: #f97316; font-size: 10px; font-family: 'JetBrains Mono', monospace; }
+  </style>
+
+  <!-- Background -->
+  <rect width="800" height="500" class="bg" />
+
+  <!-- The "Web" (Unsafe) -->
+  <g transform="translate(50, 100)">
+    <text x="0" y="-20" class="title" fill="#ef4444">Unsafe Web Context</text>
+    <rect width="300" height="300" fill="#111827" rx="8" stroke="#374151" />
+    <!-- Mock Web Content -->
+    <rect x="20" y="30" width="100" height="20" fill="#374151" rx="4" />
+    <rect x="20" y="70" width="260" height="10" fill="#374151" rx="2" opacity="0.5" />
+    <rect x="20" y="90" width="200" height="10" fill="#374151" rx="2" opacity="0.5" />
+    <!-- PII Data -->
+    <text x="20" y="150" fill="#ef4444" font-family="monospace" font-size="12">email: user@company.com</text>
+    <text x="20" y="170" fill="#ef4444" font-family="monospace" font-size="12">phone: +1-555-0123</text>
+    <text x="20" y="190" fill="#ef4444" font-family="monospace" font-size="12">auth_token: sk_live_...</text>
+  </g>
+
+  <!-- Arrow -->
+  <path d="M370 250 L430 250" stroke="#10b981" stroke-width="2" marker-end="url(#arrowhead)" />
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#10b981" />
+    </marker>
+  </defs>
+
+  <!-- The "Container" (Safe) -->
+  <g transform="translate(450, 100)">
+    <text x="0" y="-20" class="title" fill="#10b981">Secure Isolated Runtime</text>
+    <rect width="300" height="300" class="container" stroke="#10b981" filter="url(#glowGreen)" />
+    
+    <!-- Redaction Layer Visualization -->
+    <rect x="0" y="0" width="300" height="40" class="browser-chrome" rx="12" />
+    <circle cx="20" cy="20" r="6" fill="#ef4444" />
+    <circle cx="40" cy="20" r="6" fill="#f59e0b" />
+    <circle cx="60" cy="20" r="6" fill="#10b981" />
+    
+    <!-- Redacted Content -->
+    <g transform="translate(20, 60)">
+      <rect x="0" y="0" width="100" height="20" fill="#374151" rx="4" />
+      <rect x="0" y="40" width="260" height="10" fill="#374151" rx="2" opacity="0.5" />
+      <rect x="0" y="60" width="200" height="10" fill="#374151" rx="2" opacity="0.5" />
+      
+      <!-- Redaction Blocks -->
+      <rect x="0" y="110" width="180" height="14" fill="#1f2937" rx="2" stroke="#f97316" stroke-width="1" stroke-dasharray="4" />
+      <text x="5" y="121" class="pii-text">[REDACTED: EMAIL]</text>
+      
+      <rect x="0" y="130" width="140" height="14" fill="#1f2937" rx="2" stroke="#f97316" stroke-width="1" stroke-dasharray="4" />
+      <text x="5" y="141" class="pii-text">[REDACTED: PHONE]</text>
+      
+      <rect x="0" y="150" width="200" height="14" fill="#1f2937" rx="2" stroke="#f97316" stroke-width="1" stroke-dasharray="4" />
+      <text x="5" y="161" class="pii-text">[REDACTED: SECRET]</text>
+    </g>
+    
+    <text x="150" y="280" text-anchor="middle" class="label" fill="#10b981">GDPR Compliant • Ephemeral • Sandboxed</text>
+  </g>
+</svg>

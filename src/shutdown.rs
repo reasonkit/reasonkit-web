@@ -483,8 +483,8 @@ fn sd_notify(state: &str) -> std::io::Result<()> {
     };
 
     // Handle abstract socket (starts with @)
-    let socket_path = if socket_path.starts_with('@') {
-        format!("\0{}", &socket_path[1..])
+    let socket_path = if let Some(rest) = socket_path.strip_prefix('@') {
+        format!("\0{rest}")
     } else {
         socket_path
     };
@@ -492,10 +492,10 @@ fn sd_notify(state: &str) -> std::io::Result<()> {
     let socket = UnixDatagram::unbound()?;
 
     // For abstract sockets, we need to use the raw bytes
-    if socket_path.starts_with('\0') {
+    if let Some(rest) = socket_path.strip_prefix('\0') {
         // Abstract socket - use socketaddr directly
         use std::os::unix::net::SocketAddr;
-        let addr = SocketAddr::from_pathname(&socket_path[1..])?;
+        let addr = SocketAddr::from_pathname(rest)?;
         socket.send_to(state.as_bytes(), addr.as_pathname().unwrap())?;
     } else {
         socket.send_to(state.as_bytes(), &socket_path)?;

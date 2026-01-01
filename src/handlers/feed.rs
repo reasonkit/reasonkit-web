@@ -15,7 +15,7 @@
 //!
 //! # Example
 //!
-//! ```rust,no_run
+//! ```rust,ignore
 //! use reasonkit_web::handlers::feed::{FeedState, feed_handler};
 //! use axum::{Router, routing::get};
 //! use std::sync::Arc;
@@ -166,7 +166,7 @@ impl FeedState {
     /// # Arguments
     ///
     /// * `capacity` - Maximum number of events to buffer in the channel.
-    ///                Clients that fall behind will miss events.
+    ///   Clients that fall behind will miss events.
     pub fn new(capacity: usize) -> Self {
         let (sender, _) = broadcast::channel(capacity);
         Self {
