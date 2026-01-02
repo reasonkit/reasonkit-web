@@ -5,6 +5,8 @@
 **High-Performance Web Sensing & Browser Automation Layer**
 **Rust-Native Implementation**
 
+[![CI](https://img.shields.io/github/actions/workflow/status/reasonkit/reasonkit-web/ci.yml?branch=main&style=flat-square&logo=github&label=CI&color=06b6d4)](https://github.com/reasonkit/reasonkit-web/actions/workflows/ci.yml)
+[![Security](https://img.shields.io/github/actions/workflow/status/reasonkit/reasonkit-web/security.yml?branch=main&style=flat-square&logo=github&label=Security&color=10b981)](https://github.com/reasonkit/reasonkit-web/actions/workflows/security.yml)
 [![Crates.io](https://img.shields.io/crates/v/reasonkit-web?style=flat-square&color=%2306b6d4)](https://crates.io/crates/reasonkit-web)
 [![docs.rs](https://img.shields.io/docsrs/reasonkit-web?style=flat-square&color=%2310b981)](https://docs.rs/reasonkit-web)
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue?style=flat-square&color=%23a855f7)](LICENSE)
