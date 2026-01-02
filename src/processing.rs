@@ -665,7 +665,7 @@ mod tests {
 
         assert_eq!(result.word_count, 5);
         assert!(result.char_count > 0);
-        assert!(result.processing_time_us >= 0);
+        let _ = result.processing_time_us;
     }
 
     #[test]

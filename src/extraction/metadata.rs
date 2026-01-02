@@ -256,8 +256,10 @@ mod tests {
 
     #[test]
     fn test_best_title() {
-        let mut meta = PageMetadata::default();
-        meta.title = Some("Page Title".to_string());
+        let mut meta = PageMetadata {
+            title: Some("Page Title".to_string()),
+            ..Default::default()
+        };
         meta.open_graph.title = Some("OG Title".to_string());
 
         // OG title should take precedence

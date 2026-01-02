@@ -624,8 +624,8 @@ mod tests {
         std::thread::sleep(std::time::Duration::from_millis(10));
         let status = ServerStatus::new(start);
 
-        // Uptime should be at least 0 (could be 0 if < 1 second)
-        assert!(status.uptime_secs >= 0);
+        // Touch value to ensure it's set
+        let _ = status.uptime_secs;
         assert!(status.healthy);
     }
 

@@ -1,0 +1,44 @@
+# =============================================================================
+# DEPRECATED - Use Monorepo Release Workflow
+# =============================================================================
+# This workflow is kept for reference but is NOT USED in monorepo mode.
+#
+# For releases, use the unified workflow at:
+#   reasonkit/.github/workflows/release.yml
+#
+# Release process:
+#   1. Bump versions: ./scripts/bump-version.sh <version>
+#   2. Commit and tag: git tag v<version>
+#   3. Push: git push && git push --tags
+#
+# The monorepo release workflow will handle all crates in dependency order.
+# =============================================================================
+
+name: "[DEPRECATED] Component Release"
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'This workflow is deprecated. Use reasonkit/.github/workflows/release.yml instead.'
+        required: true
+        type: boolean
+        default: false
+
+jobs:
+  deprecated-notice:
+    name: Deprecated Notice
+    runs-on: ubuntu-latest
+    steps:
+      - name: Show deprecation notice
+        run: |
+          echo "⚠️  This workflow is DEPRECATED"
+          echo ""
+          echo "Please use the monorepo release workflow instead:"
+          echo "  reasonkit/.github/workflows/release.yml"
+          echo ""
+          echo "Release process:"
+          echo "  1. ./scripts/bump-version.sh <version>"
+          echo "  2. git tag v<version>"
+          echo "  3. git push && git push --tags"
+          exit 1

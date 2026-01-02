@@ -266,11 +266,7 @@ mod handler_integration_tests {
 
         // Publish many events rapidly
         for i in 0..1000 {
-            state.publish_capture_received(
-                &format!("bulk-{}", i),
-                "https://bulk-test.com",
-                "mhtml",
-            );
+            state.publish_capture_received(format!("bulk-{}", i), "https://bulk-test.com", "mhtml");
         }
 
         // Should handle high volume without issues

@@ -692,7 +692,7 @@ mod tests {
         // HDRHistogram uses bucketing with some precision loss, so max may be slightly higher
         let max = histogram.max();
         assert!(
-            max >= 50000 && max <= 51000,
+            (50000..=51000).contains(&max),
             "max should be ~50000, got {max}"
         );
 

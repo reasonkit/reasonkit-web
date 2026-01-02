@@ -409,7 +409,7 @@ proptest! {
         let is_method_not_found = code == -32601;
         let is_invalid_params = code == -32602;
         let is_internal_error = code == -32603;
-        let is_server_error = code >= -32099 && code <= -32000;
+        let is_server_error = (-32099..=-32000).contains(&code);
 
         prop_assert!(
             is_parse_error || is_invalid_request || is_method_not_found ||
@@ -590,9 +590,8 @@ proptest! {
             data: Value::Object(serde_json::Map::new()),
         };
 
-        // Timestamp should be a reasonable Unix epoch value
-        prop_assert!(event.timestamp <= u64::MAX,
-            "Timestamp should be valid");
+        // Touch timestamp to ensure it's set
+        let _ = event.timestamp;
     }
 
     // ========================================================================

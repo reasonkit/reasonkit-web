@@ -16,12 +16,11 @@
 //! require a running Chrome/Chromium instance. Run with `--ignored` flag to include.
 
 use reasonkit_web::mcp::types::{
-    JsonRpcError, JsonRpcRequest, JsonRpcResponse, McpCapabilities, McpServerInfo,
-    McpToolDefinition, ToolCallParams, ToolCallResult, ToolContent,
+    JsonRpcRequest, JsonRpcResponse, McpCapabilities, McpServerInfo, McpToolDefinition,
+    ToolCallParams, ToolCallResult, ToolContent,
 };
 use reasonkit_web::mcp::{McpServer, ToolRegistry, AVAILABLE_TOOLS};
 use serde_json::{json, Value};
-use std::collections::HashMap;
 
 // ============================================================================
 // Test Utilities
@@ -43,6 +42,7 @@ fn parse_request(json_str: &str) -> Result<JsonRpcRequest, serde_json::Error> {
 }
 
 /// Verify a response is a success response with result
+#[allow(dead_code)]
 fn assert_success_response(response: &JsonRpcResponse) {
     assert!(
         response.result.is_some(),
@@ -56,6 +56,7 @@ fn assert_success_response(response: &JsonRpcResponse) {
 }
 
 /// Verify a response is an error response
+#[allow(dead_code)]
 fn assert_error_response(response: &JsonRpcResponse, expected_code: i32) {
     assert!(
         response.error.is_some(),
@@ -74,13 +75,14 @@ fn assert_error_response(response: &JsonRpcResponse, expected_code: i32) {
 }
 
 /// Helper to simulate a complete MCP request/response cycle
+#[allow(dead_code)]
 async fn simulate_mcp_request(
-    server: &McpServer,
+    _server: &McpServer,
     request: JsonRpcRequest,
 ) -> Option<JsonRpcResponse> {
     // The server's handle_request method is private, but we can test via
     // the public interface by using handle_line
-    let json = serde_json::to_string(&request).unwrap();
+    let _json = serde_json::to_string(&request).unwrap();
 
     // For this test, we need to use the server's internal handling
     // Since McpServer.run() blocks on stdin, we test the protocol types directly
@@ -653,20 +655,20 @@ mod mcp_server_tests {
 
     #[test]
     fn test_server_creation() {
-        let server = McpServer::new();
+        let _server = McpServer::new();
         // Server should be created without panic
         // Cannot test run() as it blocks on stdin
     }
 
     #[test]
     fn test_server_default() {
-        let server = McpServer::default();
+        let _server = McpServer::default();
         // Default should work the same as new()
     }
 
     #[tokio::test]
     async fn test_server_handles_ping() {
-        let server = McpServer::new();
+        let _server = McpServer::new();
         // The ping method returns {"pong": true}
         // This is tested via unit tests in the server module
     }
@@ -1055,7 +1057,7 @@ mod integration_scenarios {
     /// Test request/response matching by ID
     #[test]
     fn test_request_response_id_matching() {
-        let requests = vec![
+        let requests = [
             create_request("ping", None, Some(1)),
             create_request("tools/list", None, Some(2)),
             create_request(
@@ -1065,7 +1067,7 @@ mod integration_scenarios {
             ),
         ];
 
-        let responses = vec![
+        let responses = [
             JsonRpcResponse::success(Some(json!(1)), json!({"pong": true})),
             JsonRpcResponse::success(Some(json!(2)), json!({"tools": []})),
             JsonRpcResponse::success(Some(json!(3)), json!({"protocolVersion": "2024-11-05"})),
@@ -1079,7 +1081,7 @@ mod integration_scenarios {
     /// Test mixed success and error responses
     #[test]
     fn test_mixed_responses() {
-        let responses = vec![
+        let responses = [
             JsonRpcResponse::success(Some(json!(1)), json!({"ok": true})),
             JsonRpcResponse::error(Some(json!(2)), -32601, "Method not found"),
             JsonRpcResponse::success(Some(json!(3)), json!({"tools": []})),

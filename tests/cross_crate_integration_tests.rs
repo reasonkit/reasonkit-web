@@ -204,7 +204,7 @@ mod mcp_server_tests {
 // ============================================================================
 
 mod content_processing_tests {
-    use reasonkit_web::processing::{ContentProcessor, ContentProcessorConfig, ProcessedContent};
+    use reasonkit_web::processing::ContentProcessor;
 
     /// Test: Content processor with defaults
     #[test]

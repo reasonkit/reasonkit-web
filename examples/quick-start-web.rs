@@ -14,7 +14,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!();
 
     // Create MCP server instance
-    let server = McpServer::new();
+    let _server = McpServer::new();
 
     println!("✅ MCP Server created");
     println!();

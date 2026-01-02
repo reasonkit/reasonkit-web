@@ -1,6 +1,6 @@
 [package]
 name = "reasonkit-web"
-version = "0.1.3"
+version = "0.1.4"
 edition = "2021"
 rust-version = "1.75"
 license = "Apache-2.0"
@@ -30,7 +30,8 @@ include = [
 maintenance = { status = "actively-developed" }
 
 [package.metadata.docs.rs]
-all-features = true
+# Don't use all-features (wasm requires wasm32 target not available on docs.rs)
+features = ["full"]
 rustdoc-args = ["--cfg", "docsrs"]
 default-target = "x86_64-unknown-linux-gnu"
 targets = [

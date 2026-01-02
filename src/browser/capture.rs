@@ -456,8 +456,10 @@ mod tests {
 
     #[test]
     fn test_validate_capture_request_quality_too_high() {
-        let mut opts = CaptureOptions::default();
-        opts.quality = 101;
+        let opts = CaptureOptions {
+            quality: 101,
+            ..Default::default()
+        };
         let result = opts.validate();
         assert!(result.is_err());
         assert!(result.unwrap_err().contains("Quality"));
@@ -465,8 +467,10 @@ mod tests {
 
     #[test]
     fn test_validate_capture_request_width_too_large() {
-        let mut opts = CaptureOptions::default();
-        opts.width = Some(20000);
+        let opts = CaptureOptions {
+            width: Some(20000),
+            ..Default::default()
+        };
         let result = opts.validate();
         assert!(result.is_err());
         assert!(result.unwrap_err().contains("Width"));
@@ -474,8 +478,10 @@ mod tests {
 
     #[test]
     fn test_validate_capture_request_height_zero() {
-        let mut opts = CaptureOptions::default();
-        opts.height = Some(0);
+        let opts = CaptureOptions {
+            height: Some(0),
+            ..Default::default()
+        };
         let result = opts.validate();
         assert!(result.is_err());
         assert!(result.unwrap_err().contains("Height"));
@@ -483,9 +489,11 @@ mod tests {
 
     #[test]
     fn test_validate_capture_request_max_dimensions() {
-        let mut opts = CaptureOptions::default();
-        opts.width = Some(16384);
-        opts.height = Some(16384);
+        let opts = CaptureOptions {
+            width: Some(16384),
+            height: Some(16384),
+            ..Default::default()
+        };
         assert!(opts.validate().is_ok());
     }
 
@@ -661,7 +669,7 @@ mod tests {
     #[test]
     fn test_capture_format_clone() {
         let format = CaptureFormat::Webp;
-        let cloned = format.clone();
+        let cloned = format;
         assert_eq!(format, cloned);
     }
 

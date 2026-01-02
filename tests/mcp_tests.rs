@@ -138,7 +138,6 @@ fn test_mcp_server_creation() {
     let _server = McpServer::new();
     // Server should be created without error
     // We can't easily test the run method without a proper test harness
-    assert!(true);
 }
 
 #[tokio::test]
