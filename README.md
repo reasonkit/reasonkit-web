@@ -27,15 +27,15 @@ Web sensing and browser automation layer for ReasonKit. Implements the Model Con
 
 ## Features
 
-![ReasonKit Web Features](https://reasonkit.sh/assets/brand/web/features.png)
+![ReasonKit Web Features](./brand/readme/features.png)
 
 ## Use Cases
 
-![ReasonKit Web Use Cases](https://reasonkit.sh/assets/brand/web/use_cases.png)
+![ReasonKit Web Use Cases](./brand/readme/use_cases.png)
 
 ## Performance
 
-![ReasonKit Web Performance Benchmark](https://reasonkit.sh/assets/brand/web/performance_benchmark.png)
+![ReasonKit Web Performance Benchmark](./brand/readme/performance_benchmark.png)
 
 ## Installation
 
@@ -100,9 +100,9 @@ let metadata = meta_extractor.extract(html)?;
 
 ### API Workflow
 
-![ReasonKit Web API Workflow](https://reasonkit.sh/assets/brand/web/api_workflow.png)
+![ReasonKit Web API Workflow](./brand/readme/api_workflow.png)
 
-![ReasonKit Web API Sequence](https://reasonkit.sh/assets/brand/web/api_flow.png)
+![ReasonKit Web API Sequence](./brand/readme/api_flow.png)
 
 ## Architecture
 
@@ -110,15 +110,15 @@ The ReasonKit Web layer implements a high-performance web sensing architecture d
 
 ### System Topology
 
-![ReasonKit Web MCP Topology](https://reasonkit.sh/assets/brand/web/mcp_topology.png)
+![ReasonKit Web MCP Topology](./brand/readme/mcp_topology.png)
 
 ### Core Architecture
 
-![ReasonKit Web Architecture Diagram](https://reasonkit.sh/assets/brand/web/architecture.png)
+![ReasonKit Web Architecture Diagram](./brand/readme/architecture.png)
 
 ### The Rust Engine
 
-![ReasonKit Web Rust Engine](https://reasonkit.sh/assets/brand/web/rust_engine.png)
+![ReasonKit Web Rust Engine](./brand/readme/rust_engine.png)
 
 ### Key Design Principles
 
@@ -129,14 +129,15 @@ The ReasonKit Web layer implements a high-performance web sensing architecture d
 
 ### Integration Flow
 
-![ReasonKit Web Integration Flow](https://reasonkit.sh/assets/brand/web/integration_flow.png)
+![ReasonKit Web Integration Flow](./brand/readme/integration_flow.png)
 
 ## Security & Privacy
 
 ReasonKit Web is built with a "GDPR by Default" philosophy, ensuring that AI reasoning systems can interact with the web safely and compliantly.
 
-![ReasonKit Web Browser Isolation Layer](https://reasonkit.sh/assets/brand/web/browser_isolation_layer.svg)
-![ReasonKit Web Security Shield](https://reasonkit.sh/assets/brand/web/security_shield.png)
+![ReasonKit Web Browser Isolation Layer](./brand/readme/browser_isolation_layer.svg)
+
+![ReasonKit Web Security Shield](./brand/readme/security_shield.png)
 
 ### Key Security Features
 - **PII Redaction Engine**: Automatically detects and redacts sensitive information (emails, phone numbers, secrets) before it leaves the secure runtime.
@@ -149,7 +150,7 @@ For detailed technical specifications, see [`docs/ARCHITECTURE.md`](docs/ARCHITE
 
 ## Technology Stack
 
-![ReasonKit Web Technology Stack](https://reasonkit.sh/assets/brand/web/tech_stack.png)
+![ReasonKit Web Technology Stack](./brand/readme/tech_stack.png)
 
 ## Version & Maturity
 
@@ -182,7 +183,7 @@ Apache License 2.0 - see [LICENSE](LICENSE)
 
 <div align="center">
 
-![ReasonKit Ecosystem Connection](https://reasonkit.sh/assets/brand/web/ecosystem_connection.png)
+![ReasonKit Ecosystem Connection](./brand/readme/ecosystem_connection.png)
 
 **Part of the ReasonKit Ecosystem**
 
