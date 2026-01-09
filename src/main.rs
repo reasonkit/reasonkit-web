@@ -9,7 +9,38 @@ use clap::Parser;
 #[command(name = "rk-web")]
 #[command(author = "ReasonKit Team <team@reasonkit.sh>")]
 #[command(version)]
-#[command(about = "High-performance MCP server for browser automation")]
+#[command(about = "ReasonKit Web — MCP Server for Browser Automation")]
+#[command(long_about = r#"ReasonKit Web — MCP Server for Browser Automation
+
+Part of The Reasoning Engine suite. This component provides high-performance
+browser automation and content extraction via the Model Context Protocol (MCP).
+
+CAPABILITIES:
+  • Headless Chrome automation via Chrome DevTools Protocol
+  • Page capture and content extraction
+  • Screenshot and DOM inspection
+  • Form interaction and navigation
+  • Session management
+
+INTEGRATION:
+  This server implements the MCP specification, enabling AI agents
+  to interact with web browsers for research and verification tasks.
+  Use with reasonkit-core's ProofGuard ThinkTool for web-based
+  claim verification and triangulation.
+
+EXAMPLES:
+  # Start server on default port
+  rk-web
+
+  # Start with custom port and verbose logging
+  rk-web --port 3010 --verbose
+
+  # Specify Chrome path (non-standard location)
+  rk-web --chrome-path /opt/chrome/chrome
+
+WEBSITE: https://reasonkit.sh
+DOCS:    https://reasonkit.sh/docs/integrations/mcp-server
+"#)]
 struct Args {
     /// Port to listen on
     #[arg(short, long, default_value = "3001")]

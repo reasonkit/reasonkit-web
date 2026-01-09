@@ -493,5 +493,5 @@ Changelog:
 
 ---
 
-*ReasonKit-web-rs | MCP Sidecar for Web Sensing | Pure Rust*
-*<https://reasonkit.sh>*
+_ReasonKit-web-rs | MCP Sidecar for Web Sensing | Pure Rust_
+_<https://reasonkit.sh>_

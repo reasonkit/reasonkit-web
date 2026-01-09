@@ -86,8 +86,8 @@ Options:
 To use ReasonKit Web with Claude Desktop:
 
 1.  Open or create your config file:
-    *   macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
-    *   Windows: `%APPDATA%\Claude\claude_desktop_config.json`
+    - macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
+    - Windows: `%APPDATA%\Claude\claude_desktop_config.json`
 
 2.  Add the server configuration:
 
@@ -159,6 +159,7 @@ async def run():
 To verify your installation works:
 
 1.  Run the test command:
+
     ```bash
     reasonkit-web test https://example.com
     ```
@@ -167,6 +168,6 @@ To verify your installation works:
 
 ## Troubleshooting
 
-*   **"No Chrome found":** Ensure Google Chrome or Chromium is installed. If it's in a non-standard location, set `CHROME_PATH`.
-*   **"Connection refused":** The tool creates a WebSocket connection to the browser. Ensure no firewall is blocking localhost ports.
-*   **"Zombie processes":** If the tool crashes, orphan Chrome processes might remain. Kill them with `pkill -f chrome`.
+- **"No Chrome found":** Ensure Google Chrome or Chromium is installed. If it's in a non-standard location, set `CHROME_PATH`.
+- **"Connection refused":** The tool creates a WebSocket connection to the browser. Ensure no firewall is blocking localhost ports.
+- **"Zombie processes":** If the tool crashes, orphan Chrome processes might remain. Kill them with `pkill -f chrome`.

@@ -13,7 +13,7 @@
 [![Rust](https://img.shields.io/badge/rust-1.74%2B-orange?style=flat-square&logo=rust&color=%23f97316)](https://www.rust-lang.org/)
 [![MCP](https://img.shields.io/badge/MCP-Compatible-green?style=flat-square&color=%2310b981)](https://modelcontextprotocol.io)
 
-*The Eyes and Ears of AI Reasoning - Now Blazingly Fast*
+_The Eyes and Ears of AI Reasoning - Now Blazingly Fast_
 
 [Documentation](https://docs.rs/reasonkit-web) | [Crates.io](https://crates.io/crates/reasonkit-web) | [ReasonKit Core](https://github.com/ReasonKit/reasonkit-core) | [Website](https://reasonkit.sh)
 
@@ -38,6 +38,22 @@ Web sensing and browser automation layer for ReasonKit. Implements the Model Con
 ![ReasonKit Web Performance Benchmark](./brand/readme/performance_benchmark.png)
 
 ## Installation
+
+### Universal Installer (Recommended)
+
+**Installs all 4 ReasonKit projects together:**
+
+```bash
+curl -fsSL https://get.reasonkit.sh | bash -s -- --with-web
+```
+
+**Platform & Shell Support:**
+- ✅ All platforms (Linux/macOS/Windows/WSL)
+- ✅ All shells (Bash/Zsh/Fish/Nu/PowerShell/Elvish)
+- ✅ Auto-detects shell and configures PATH
+- ✅ Beautiful progress visualization
+
+### Cargo (Rust Library)
 
 Add to your `Cargo.toml`:
 
@@ -140,6 +156,7 @@ ReasonKit Web is built with a "GDPR by Default" philosophy, ensuring that AI rea
 ![ReasonKit Web Security Shield](./brand/readme/security_shield.png)
 
 ### Key Security Features
+
 - **PII Redaction Engine**: Automatically detects and redacts sensitive information (emails, phone numbers, secrets) before it leaves the secure runtime.
 - **Headless Isolation**: Browser sessions run in isolated containers with no persistent state.
 - **Content Sanitization**: Malicious scripts and trackers are stripped at the DOM level.
@@ -154,13 +171,13 @@ For detailed technical specifications, see [`docs/ARCHITECTURE.md`](docs/ARCHITE
 
 ## Version & Maturity
 
-| Component | Status | Notes |
-|-----------|--------|-------|
-| **MCP Server** | ✅ Stable | Model Context Protocol integration |
-| **CDP Client** | ✅ Stable | Chrome DevTools Protocol via chromiumoxide |
-| **Content Extraction** | ✅ Stable | HTML parsing, metadata extraction |
-| **PII Redaction** | ✅ Stable | GDPR-compliant data handling |
-| **WASM Support** | 🔶 Beta | Browser-native execution |
+| Component              | Status    | Notes                                      |
+| ---------------------- | --------- | ------------------------------------------ |
+| **MCP Server**         | ✅ Stable | Model Context Protocol integration         |
+| **CDP Client**         | ✅ Stable | Chrome DevTools Protocol via chromiumoxide |
+| **Content Extraction** | ✅ Stable | HTML parsing, metadata extraction          |
+| **PII Redaction**      | ✅ Stable | GDPR-compliant data handling               |
+| **WASM Support**       | 🔶 Beta   | Browser-native execution                   |
 
 **Current Version:** v0.1.3 | [CHANGELOG](CHANGELOG.md) | [Releases](https://github.com/reasonkit/reasonkit-web/releases)
 
@@ -189,6 +206,6 @@ Apache License 2.0 - see [LICENSE](LICENSE)
 
 [ReasonKit Core](https://github.com/reasonkit/reasonkit-core) • [ReasonKit Mem](https://github.com/reasonkit/reasonkit-mem) • [Website](https://reasonkit.sh)
 
-*"See How Your AI Thinks"*
+_"See How Your AI Thinks"_
 
 </div>

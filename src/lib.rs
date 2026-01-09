@@ -37,6 +37,7 @@ pub mod mcp;
 pub mod metrics;
 pub mod processing;
 pub mod shutdown;
+pub mod stripe;
 
 /// Crate version
 pub const VERSION: &str = env!("CARGO_PKG_VERSION");

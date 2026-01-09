@@ -12,9 +12,9 @@ This pattern uses ReasonKit Web as the primary information gathering tool for a 
 1.  **Search:** Agent uses `web_navigate` to a search engine (e.g., Google, Bing).
 2.  **Analyze Results:** Agent uses `web_extract_links` to find relevant result URLs.
 3.  **Deep Dive:** For each relevant URL:
-    *   `web_navigate` to the URL.
-    *   `web_extract_content` (Markdown format) to read the page.
-    *   `web_extract_metadata` to get author/date info.
+    - `web_navigate` to the URL.
+    - `web_extract_content` (Markdown format) to read the page.
+    - `web_extract_metadata` to get author/date info.
 4.  **Synthesize:** Agent combines extracted content into a summary.
 
 ### Example Sequence (JSON-RPC)
@@ -47,9 +47,9 @@ This pattern is useful for frontend testing or design validation agents. It reli
 
 ### Best Practices
 
-*   Use `fullPage: true` for design reviews.
-*   Use specific `selector` screenshots for component testing.
-*   Combine with a Vision-Language Model (VLM) like Claude 3.5 Sonnet to analyze the images.
+- Use `fullPage: true` for design reviews.
+- Use specific `selector` screenshots for component testing.
+- Combine with a Vision-Language Model (VLM) like Claude 3.5 Sonnet to analyze the images.
 
 ## Pattern 3: The Archivist
 
@@ -59,10 +59,10 @@ This pattern is for compliance, auditing, or data preservation agents. It focuse
 
 1.  **Discovery:** Agent identifies a list of URLs to archive.
 2.  **Forensic Capture:** For each URL:
-    *   `web_navigate` to ensure the page loads.
-    *   `web_capture_mhtml` to get a single-file archive of all resources (HTML, CSS, Images).
-    *   `web_pdf` to get a printable, immutable document version.
-    *   `web_extract_metadata` to log the timestamp and original metadata.
+    - `web_navigate` to ensure the page loads.
+    - `web_capture_mhtml` to get a single-file archive of all resources (HTML, CSS, Images).
+    - `web_pdf` to get a printable, immutable document version.
+    - `web_extract_metadata` to log the timestamp and original metadata.
 3.  **Storage:** Save the artifacts (MHTML, PDF, JSON metadata) to long-term storage (S3, reasonkit-mem, etc.).
 
 ## Pattern 4: The Data Scraper (Structured)
@@ -74,21 +74,21 @@ This pattern extracts structured data (tables, lists, specific fields) from unst
 1.  **Navigate:** Go to the page containing data.
 2.  **Schema Injection:** Agent constructs a JavaScript function to traverse the DOM and extract specific fields into a JSON object.
 3.  **Execution:** Use `web_execute_js` to run the extraction script.
-    *   *Why JS?* It's often more reliable/precise for structured data than converting the whole page to Markdown and asking the LLM to parse it back out.
+    - _Why JS?_ It's often more reliable/precise for structured data than converting the whole page to Markdown and asking the LLM to parse it back out.
 4.  **Validation:** Agent validates the returned JSON structure.
 
 ### Example JS Payload
 
 ```javascript
 // Passed to web_execute_js
-Array.from(document.querySelectorAll('table.data tr')).map(row => {
-  const cells = row.querySelectorAll('td');
+Array.from(document.querySelectorAll("table.data tr")).map((row) => {
+  const cells = row.querySelectorAll("td");
   return {
     id: cells[0]?.innerText,
     name: cells[1]?.innerText,
-    status: cells[2]?.innerText
+    status: cells[2]?.innerText,
   };
-})
+});
 ```
 
 ## Pattern 5: The Session Manager (Authenticated)
@@ -98,21 +98,21 @@ Handling authenticated sessions (login walls).
 ### Approaches
 
 1.  **Pre-authenticated Profile:**
-    *   Launch Chrome manually with a specific user data directory.
-    *   Log in to the required services.
-    *   Point `reasonkit-web` to use that existing user data directory via environment variables or arguments (if supported by your specific deployment) or by ensuring the `CHROME_PATH` uses the profile.
-    *   *Note:* Currently, `reasonkit-web` starts fresh sessions by default. For persistent sessions, you may need to modify the browser launch arguments in `src/browser/mod.rs` to point to a user data dir.
+    - Launch Chrome manually with a specific user data directory.
+    - Log in to the required services.
+    - Point `reasonkit-web` to use that existing user data directory via environment variables or arguments (if supported by your specific deployment) or by ensuring the `CHROME_PATH` uses the profile.
+    - _Note:_ Currently, `reasonkit-web` starts fresh sessions by default. For persistent sessions, you may need to modify the browser launch arguments in `src/browser/mod.rs` to point to a user data dir.
 
 2.  **Agent Login:**
-    *   Agent navigates to login page.
-    *   Agent uses `web_execute_js` to fill username/password fields (retrieved securely from env/secrets, NEVER hardcoded).
-    *   Agent submits form.
-    *   Agent handles 2FA (if possible, or flags for human intervention).
+    - Agent navigates to login page.
+    - Agent uses `web_execute_js` to fill username/password fields (retrieved securely from env/secrets, NEVER hardcoded).
+    - Agent submits form.
+    - Agent handles 2FA (if possible, or flags for human intervention).
 
 ---
 
 ## Error Handling Patterns
 
-*   **Retry Logic:** If `web_navigate` fails (timeout/network), implement an exponential backoff retry in the agent logic.
-*   **Fallback:** If `web_extract_content` (Markdown) is messy/empty, try `web_extract_content` (Text) or `web_screenshot` + OCR.
-*   **Stealth:** If blocked (403/Captcha), ensure the underlying browser is using stealth plugins (ReasonKit Web does this by default, but aggressive blocking may require slower interactions).
+- **Retry Logic:** If `web_navigate` fails (timeout/network), implement an exponential backoff retry in the agent logic.
+- **Fallback:** If `web_extract_content` (Markdown) is messy/empty, try `web_extract_content` (Text) or `web_screenshot` + OCR.
+- **Stealth:** If blocked (403/Captcha), ensure the underlying browser is using stealth plugins (ReasonKit Web does this by default, but aggressive blocking may require slower interactions).

@@ -4,30 +4,30 @@
 # Source code changes
 rust:
   - changed-files:
-      - any-glob-to-any-file: 'src/**/*.rs'
+      - any-glob-to-any-file: "src/**/*.rs"
 
 # Documentation changes
 documentation:
   - changed-files:
       - any-glob-to-any-file:
-          - '*.md'
-          - 'docs/**/*'
+          - "*.md"
+          - "docs/**/*"
 
 # CI/CD changes
 ci:
   - changed-files:
-      - any-glob-to-any-file: '.github/**/*'
+      - any-glob-to-any-file: ".github/**/*"
 
 # Dependencies
 dependencies:
   - changed-files:
       - any-glob-to-any-file:
-          - 'Cargo.toml'
-          - 'Cargo.lock'
+          - "Cargo.toml"
+          - "Cargo.lock"
 
 # Tests
 tests:
   - changed-files:
       - any-glob-to-any-file:
-          - 'tests/**/*'
-          - 'benches/**/*'
+          - "tests/**/*"
+          - "benches/**/*"

@@ -99,6 +99,12 @@ hdrhistogram = "7"
 parking_lot = "0.12"
 sysinfo = "0.33"
 
+# Stripe webhook handling
+hmac = "0.12"
+sha2 = "0.10"
+hex = "0.4"
+async-trait = "0.1"
+
 [dev-dependencies]
 tokio-test = "0.4"
 pretty_assertions = "1"

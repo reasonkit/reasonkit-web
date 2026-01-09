@@ -1009,7 +1009,7 @@ Log levels: `error`, `warn`, `info`, `debug`, `trace`
 
 <div align="center">
 
-**ReasonKit Web** - *The Eyes and Ears of AI Reasoning*
+**ReasonKit Web** - _The Eyes and Ears of AI Reasoning_
 
 [Website](https://reasonkit.sh) | [GitHub](https://github.com/ReasonKit/reasonkit-web) | [Crates.io](https://crates.io/crates/reasonkit-web)
 

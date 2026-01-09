@@ -5,11 +5,13 @@ Comprehensive browser-based testing suite using `wasm-bindgen-test`.
 ## Prerequisites
 
 1. **Install wasm-pack**:
+
    ```bash
    cargo install wasm-pack
    ```
 
 2. **Install Chrome/Chromium** (for headless testing):
+
    ```bash
    # Ubuntu/Debian
    sudo apt install chromium-browser
@@ -51,6 +53,7 @@ wasm-pack test --headless --chrome --firefox
 ## Test Categories
 
 ### DOM Interaction Tests (`dom_tests`)
+
 - Element creation and manipulation
 - Attribute handling
 - Class list operations
@@ -59,6 +62,7 @@ wasm-pack test --headless --chrome --firefox
 - Style manipulation
 
 ### Fetch API Tests (`fetch_tests`)
+
 - GET/POST requests
 - JSON response handling
 - Headers and status codes
@@ -66,6 +70,7 @@ wasm-pack test --headless --chrome --firefox
 - Redirect following
 
 ### WebSocket Tests (`websocket_tests`)
+
 - Connection establishment
 - Text message send/receive
 - Binary message handling
@@ -73,18 +78,21 @@ wasm-pack test --headless --chrome --firefox
 - URL validation
 
 ### Storage Tests (`storage_tests`)
+
 - LocalStorage operations
 - SessionStorage operations
 - JSON serialization
 - Key iteration
 
 ### Event Tests (`event_tests`)
+
 - Custom event creation
 - Event listener add/remove
 - Propagation control
 - preventDefault handling
 
 ### Browser Connector Tests (`browser_connector_tests`)
+
 - Connector state management
 - Console API access
 - Performance API
@@ -145,15 +153,18 @@ jobs:
 ## Troubleshooting
 
 ### Tests hang
+
 - Ensure Chrome/Firefox is installed
 - Check for blocking async operations
 - Verify network access for fetch tests
 
 ### CORS errors in fetch tests
+
 - Tests use httpbin.org which supports CORS
 - Local servers need proper CORS headers
 
 ### WebSocket connection failures
+
 - echo.websocket.events may be temporarily unavailable
 - Tests include timeout handling
 
