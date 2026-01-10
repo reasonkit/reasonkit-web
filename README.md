@@ -5,13 +5,14 @@
 **High-Performance Web Sensing & Browser Automation Layer**
 **Rust-Native Implementation**
 
-[![CI](https://img.shields.io/github/actions/workflow/status/reasonkit/reasonkit-web/ci.yml?branch=main&style=flat-square&logo=github&label=CI&color=06b6d4)](https://github.com/reasonkit/reasonkit-web/actions/workflows/ci.yml)
-[![Security](https://img.shields.io/github/actions/workflow/status/reasonkit/reasonkit-web/security.yml?branch=main&style=flat-square&logo=github&label=Security&color=10b981)](https://github.com/reasonkit/reasonkit-web/actions/workflows/security.yml)
-[![Crates.io](https://img.shields.io/crates/v/reasonkit-web?style=flat-square&color=%2306b6d4)](https://crates.io/crates/reasonkit-web)
-[![docs.rs](https://img.shields.io/docsrs/reasonkit-web?style=flat-square&color=%2310b981)](https://docs.rs/reasonkit-web)
-[![License](https://img.shields.io/badge/license-Apache%202.0-blue?style=flat-square&color=%23a855f7)](LICENSE)
-[![Rust](https://img.shields.io/badge/rust-1.74%2B-orange?style=flat-square&logo=rust&color=%23f97316)](https://www.rust-lang.org/)
-[![MCP](https://img.shields.io/badge/MCP-Compatible-green?style=flat-square&color=%2310b981)](https://modelcontextprotocol.io)
+[![CI](https://img.shields.io/github/actions/workflow/status/reasonkit/reasonkit-web/ci.yml?branch=main&style=flat-square&logo=github&label=CI&color=06b6d4&logoColor=06b6d4)](https://github.com/reasonkit/reasonkit-web/actions/workflows/ci.yml)
+[![Security](https://img.shields.io/github/actions/workflow/status/reasonkit/reasonkit-web/security.yml?branch=main&style=flat-square&logo=github&label=Security&color=10b981&logoColor=10b981)](https://github.com/reasonkit/reasonkit-web/actions/workflows/security.yml)
+[![Crates.io](https://img.shields.io/crates/v/reasonkit-web?style=flat-square&logo=rust&color=10b981&logoColor=f9fafb)](https://crates.io/crates/reasonkit-web)
+[![docs.rs](https://img.shields.io/docsrs/reasonkit-web?style=flat-square&logo=docs.rs&color=06b6d4&logoColor=f9fafb)](https://docs.rs/reasonkit-web)
+[![Downloads](https://img.shields.io/crates/d/reasonkit-web?style=flat-square&color=ec4899&logo=rust&logoColor=f9fafb)](https://crates.io/crates/reasonkit-web)
+[![License](https://img.shields.io/badge/license-Apache%202.0-a855f7?style=flat-square&labelColor=030508)](LICENSE)
+[![Rust](https://img.shields.io/badge/rust-1.75+-f97316?style=flat-square&logo=rust&logoColor=f9fafb)](https://www.rust-lang.org/)
+[![MCP](https://img.shields.io/badge/MCP-Compatible-10b981?style=flat-square&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmOWZhZmIiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNMTIgMnYyME0yIDEyaDIwIi8+PC9zdmc+)](https://modelcontextprotocol.io)
 
 _The Eyes and Ears of AI Reasoning - Now Blazingly Fast_
 
@@ -48,6 +49,7 @@ curl -fsSL https://get.reasonkit.sh | bash -s -- --with-web
 ```
 
 **Platform & Shell Support:**
+
 - ✅ All platforms (Linux/macOS/Windows/WSL)
 - ✅ All shells (Bash/Zsh/Fish/Nu/PowerShell/Elvish)
 - ✅ Auto-detects shell and configures PATH
