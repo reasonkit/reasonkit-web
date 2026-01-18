@@ -6,7 +6,7 @@
 # RUST / CARGO
 # ============================================================
 /target/
-Cargo.lock
+# Note: Cargo.lock IS tracked for reproducible CI builds with --locked flag
 **/*.rs.bk
 *.pdb
 

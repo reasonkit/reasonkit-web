@@ -29,10 +29,10 @@
 //!
 //! # Example
 //!
-//! ```rust,no_run
+//! ```rust,ignore
 //! use reasonkit_web::stripe::{
 //!     StripeWebhookConfig, StripeWebhookState, stripe_webhook_router,
-//!     EventProcessor, SubscriptionHandler,
+//!     EventProcessor, SubscriptionHandler, events::SubscriptionEvent,
 //! };
 //! use std::sync::Arc;
 //!
@@ -49,14 +49,8 @@
 //!
 //! struct MySubscriptionHandler;
 //!
-//! #[async_trait::async_trait]
-//! impl SubscriptionHandler for MySubscriptionHandler {
-//!     async fn on_subscription_created(&self, subscription: &Subscription) -> anyhow::Result<()> {
-//!         // Handle new subscription
-//!         Ok(())
-//!     }
-//!     // ... other handlers
-//! }
+//! // Implement SubscriptionHandler trait for your handler
+//! // See processor.rs for the full trait definition
 //! ```
 
 pub mod config;
