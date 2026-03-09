@@ -49,7 +49,7 @@ tokio = { version = "1", features = ["full"] }
 chromiumoxide = { version = "0.8", features = ["tokio-runtime"] }
 
 # MCP server
-rmcp = "0.17"
+rmcp = "1.1"
 
 # Serialization
 serde = { version = "1", features = ["derive"] }
@@ -78,7 +78,7 @@ clap = { version = "4", features = ["derive"] }
 
 # HTML/Content processing
 scraper = "0.25"
-html5ever = "0.36"
+html5ever = "0.38"
 base64 = "0.22.1"
 futures = "0.3.32"
 regex = "1.12.3"
