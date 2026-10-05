@@ -49,7 +49,7 @@ tokio = { version = "1", features = ["full"] }
 chromiumoxide = { version = "0.8", features = ["tokio-runtime"] }
 
 # MCP server
-rmcp = "0.17"
+rmcp = "3.5"
 
 # Serialization
 serde = { version = "1", features = ["derive"] }
@@ -77,9 +77,9 @@ tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 clap = { version = "4", features = ["derive"] }
 
 # HTML/Content processing
-scraper = "0.25"
-html5ever = "0.36"
-base64 = "0.22.1"
+scraper = "0.27"
+html5ever = "0.39"
+base64 = "0.23.1"
 futures = "0.3.32"
 regex = "1.12.3"
 rand = "0.10.0"
@@ -89,7 +89,7 @@ htmlescape = "0.3"
 axum = "0.8"
 http = "1"
 tower = "0.5"
-tower-http = { version = "0.6", features = ["cors"] }
+tower-http = { version = "0.7", features = ["cors"] }
 hyper = "1"
 
 # Handlers dependencies
@@ -98,11 +98,11 @@ url = "2"
 uuid = { version = "1", features = ["v4", "serde"] }
 hdrhistogram = "7"
 parking_lot = "0.12"
-sysinfo = "0.38"
+sysinfo = "0.39"
 
 # Stripe webhook handling
-hmac = "0.12"
-sha2 = "0.10"
+hmac = "0.13"
+sha2 = "0.11"
 hex = "0.4"
 async-trait = "0.1"
 
